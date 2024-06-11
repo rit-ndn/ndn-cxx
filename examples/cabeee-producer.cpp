@@ -60,7 +60,7 @@ private:
     auto data = std::make_shared<Data>();
     data->setName(interest.getName());
     data->setFreshnessPeriod(10_s);
-    data->setContent("Hello, world!");
+    data->setContent("cabeee - Hello, world!");
 
     // In order for the consumer application to be able to validate the packet, you need to setup
     // the following keys:
@@ -75,11 +75,11 @@ private:
     //         ndnsec sign-req /example/testApp | ndnsec cert-gen -s /example -i example | ndnsec cert-install -
 
     // Sign Data packet with default identity
-    m_keyChain.sign(*data);
+    //m_keyChain.sign(*data);
     // m_keyChain.sign(*data, signingByIdentity(<identityName>));
     // m_keyChain.sign(*data, signingByKey(<keyName>));
     // m_keyChain.sign(*data, signingByCertificate(<certName>));
-    // m_keyChain.sign(*data, signingWithSha256());
+     m_keyChain.sign(*data, signingWithSha256());
 
     // Return Data packet to the requester
     std::cout << "<< D: " << *data << std::endl;
