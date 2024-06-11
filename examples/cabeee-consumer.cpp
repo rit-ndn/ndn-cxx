@@ -34,7 +34,7 @@ class Consumer
 public:
   Consumer()
   {
-    m_validator.load("cabeee-trust-schema.conf");
+    m_validator.load("examples/cabeee-trust-schema.conf");
   }
 
   void
@@ -61,7 +61,8 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data " << data << std::endl;
+    std::cout << "Received Data: " << data << std::endl;
+    std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
     m_validator.validate(data,
                          [] (const Data&) {
