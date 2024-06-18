@@ -34,9 +34,10 @@ class Producer
 {
 public:
   void
-  run()
+  run(char* prefix)
   {
-    m_face.setInterestFilter("/interCACHE/testApp/randomData",
+    //m_face.setInterestFilter("/interCACHE/testApp/randomData",
+    m_face.setInterestFilter(prefix,
                              std::bind(&Producer::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Producer::onRegisterFailed, this, _1, _2));
@@ -108,7 +109,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Producer producer;
-    producer.run();
+    producer.run(argv[1]);
     return 0;
   }
   catch (const std::exception& e) {

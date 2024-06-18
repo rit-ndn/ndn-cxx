@@ -34,13 +34,14 @@ class Consumer
 public:
   Consumer()
   {
-    m_validator.load("examples/cabeee-trust-schema.conf");
+    m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
   }
 
   void
-  run()
+  run(char* prefix)
   {
-    Name interestName("/interCACHE/testApp/randomData");
+    //Name interestName("/interCACHE/testApp/randomData");
+    Name interestName(prefix);
     interestName.appendVersion();
 
     Interest interest(interestName);
@@ -98,7 +99,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Consumer consumer;
-    consumer.run();
+    consumer.run(argv[1]);
     return 0;
   }
   catch (const std::exception& e) {
