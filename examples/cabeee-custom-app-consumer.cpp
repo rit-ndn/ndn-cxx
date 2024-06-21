@@ -27,7 +27,6 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
-#include "ndn-cxx/util/span.hpp"
 #include <ndn-cxx/util/io.hpp>
 
 #include <array>
@@ -75,12 +74,12 @@ public:
     Name interestName("/interCACHE/tempName");
     interestName.appendVersion();
     Interest interest(interestName);
-    interest.setMustBeFresh(true);
+    //interest.setMustBeFresh(true);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
     m_orchestrate = atoi(orchestrationType);
     if (m_orchestrate == 0) {
-      dagObject["head"] = PREFIX + sinkService;
+      dagObject["head"] = sinkService;
       interest.setName(PREFIX + sinkService);
       std::cout << "Interest name is: " << interest.getName() << std::endl;
 
@@ -105,11 +104,11 @@ public:
       }
     }
     else if (m_orchestrate == 1){ // orchestration method A
-      dagObject["head"] = "/interCACHE/serviceOrchestration";
+      dagObject["head"] = "/serviceOrchestration";
       interest.setName("/interCACHE/serviceOrchestration");
     }
     else if (m_orchestrate == 2){ // orchestration method B
-      dagObject["head"] = "/interCACHE/serviceOrchestration/dag";
+      dagObject["head"] = "/serviceOrchestration/dag";
       interest.setName("/interCACHE/serviceOrchestration/dag");
     }
     else
@@ -160,8 +159,20 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
-    std::cout << "Data Content: " << data.getContent().value() << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Data Content: " << data.getContent().value() << std::endl;
+
+    std::cout << "\n\n      CONSUMER: DATA received for name " << data.getName() << std::endl << "\n\n";
+    ndn::Block myRxedBlock = data.getContent();
+    //std::cout << "\nCONSUMER: result = " << myRxedBlock << std::endl << "\n\n";
+
+    uint8_t *pContent = (uint8_t *)(myRxedBlock.data()); // this points to the first byte, which is the TLV-TYPE (21 for data packet contet)
+    pContent++;  // now this points to the second byte, containing 253 (0xFD), meaning size (1024) is expressed with 2 octets
+    pContent++;  // now this points to the first size octet
+    pContent++;  // now this points to the second size octet
+    pContent++;  // now we are pointing at the first byte of the true content
+    std::cout << "\n  The final answer is: " <<  (int)(*pContent) << std::endl << "\n\n";
+  
 
     m_validator.validate(data,
                          [] (const Data&) {

@@ -35,9 +35,12 @@ class Producer
 {
 public:
   void
-  run(char* servicePrefix)
+  run(char* PREFIX, char* servicePrefix)
   {
-    m_face.setInterestFilter(servicePrefix,
+    std::string fullPrefix(PREFIX);
+    fullPrefix.append(servicePrefix);
+    std::cout << "Producer listening to: " << fullPrefix << '\n';
+    m_face.setInterestFilter(fullPrefix,
                              std::bind(&Producer::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Producer::onRegisterFailed, this, _1, _2));
@@ -60,10 +63,9 @@ private:
     // Create Data packet
     auto data = std::make_shared<Data>();
     data->setName(interest.getName());
-    data->setFreshnessPeriod(10_s);
+    data->setFreshnessPeriod(9_s);
 
 
-    //data->setContent("cabeee - Hello, world!");
     unsigned char myBuffer[1024];
     // write to the buffer
     myBuffer[0] = 5;
@@ -116,7 +118,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Producer producer;
-    producer.run(argv[1]);
+    producer.run(argv[1], argv[2]);
     return 0;
   }
   catch (const std::exception& e) {
