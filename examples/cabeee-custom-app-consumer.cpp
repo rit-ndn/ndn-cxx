@@ -31,6 +31,10 @@ using json = nlohmann::json;
 
 #include <array>
 
+#include <ctime>
+#include <chrono>
+
+
 // Enclosing code in ndn simplifies coding (can also use `using namespace ndn`)
 namespace ndn {
 // Additional nested namespaces should be used to prevent/limit name conflicts
@@ -47,6 +51,8 @@ public:
   void
   run(char* PREFIX, char* workflowFile, char* orchestrationType)
   {
+
+    startTime = std::chrono::steady_clock::now();
 
     m_dagPath = workflowFile;
     std::cout << "Workflow File: " << m_dagPath << std::endl;
@@ -181,6 +187,11 @@ private:
                          [] (const Data&, const security::ValidationError& error) {
                            std::cout << "Error authenticating data: " << error << std::endl;
                          });
+
+    endTime = std::chrono::steady_clock::now();
+    std::chrono::steady_clock::duration serviceLatency = endTime - startTime;
+    double nSeconds = double(serviceLatency.count()) * std::chrono::steady_clock::period::num / std::chrono::steady_clock::period::den;
+    std::cout << "\n  Service Latency: " <<  nSeconds << " seconds." << std::endl;
   }
 
   void
@@ -200,6 +211,8 @@ private:
   ValidatorConfig m_validator{m_face};
   uint16_t m_orchestrate;
   std::string m_dagPath;
+  std::chrono::steady_clock::time_point startTime;
+  std::chrono::steady_clock::time_point endTime;
 };
 
 } // namespace examples
