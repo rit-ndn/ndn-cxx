@@ -94,12 +94,8 @@ private:
     //std::string dagString = std::string(reinterpret_cast<const char*>(dagParameter.value()), dagParameter.value_size());
     auto dagObject = json::parse(dagString);
 
-
-
     //std::cout << "\n\n\n\n\n\n\n\n\n\n\n\nStarting new SendInterest for " << interestName << '\n';
     //std::cout << "Full DAG as received: " << std::setw(2) << dagObject << '\n';
-
-
 
     // we PRUNE the DAG workflow to not include anything further downstream than this service,
     // so that when caching is implemented, we can reuse intermediate results for other DAG workflows which use portions of the current DAG.
@@ -256,21 +252,12 @@ private:
     // decode the DAG string contained in the application parameters, so we can generate the new interest(s)
     //extract custom parameter from interest packet
     auto dagParameterFromInterest = interest.getApplicationParameters();
-    //std::string dagString = ndn::encoding::readString(dagParameterFromInterest);
     std::string dagString = std::string(reinterpret_cast<const char*>(dagParameterFromInterest.value()), dagParameterFromInterest.value_size());
-    //std::string dagString = ndn::lp::DecodeHelper();
-    //auto dagBuffer = dagParameterFromInterest.ndn::Block::getBuffer();
-    //auto dagValue = dagParameterFromInterest.ndn::Block::value();
-    ////std::cout << ("Interest parameters received: " << dagParameterFromInterest);
-    //std::cout << ("Interest parameters received as string: " << dagString);
-    ////std::cout << ("Interest parameters received as value: " << dagValue);
-
 
     //bool dagParameterDigestValid = interest.isParametersDigestValid();
     //std::cout << "Fwd: Interest parameter digest is valid: " << dagParameterDigestValid << std::endl;
     //bool dagParameterPresent = interest.hasApplicationParameters();
     //std::cout << "Fwd: Interest parameters presesnt: " << dagParameterPresent << std::endl;
-
 
     // read the dag parameters and figure out which interests to generate next. Change the dagParameters accordingly (head will be different)
     m_dagObject = json::parse(dagString);
@@ -356,10 +343,7 @@ private:
     std::cout << "Received Data: " << data << std::endl;
     std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
-    //TODO: continue here
 
-
-    //From consumer app:
 
     ndn::Block myRxedBlock = data.getContent();
     uint8_t *pContent = (uint8_t *)(myRxedBlock.data()); // this points to the first byte, which is the TLV-TYPE (21 for data packet contet)
@@ -377,11 +361,6 @@ private:
                          });
 
 
-
-
-
-
-    //From Forwarder onData method:
 
 
     ndn::Name simpleName;
@@ -412,11 +391,6 @@ private:
     // perhaps keep a mapping of signature to requesting service, and use the received signature to determine which service version asked for it
     //TODO4: for now, this works with a single version of each service. We can not have the same service appear twice in the same DAG until we make the changes above.
 
-        ////auto dagParameterFromData = data->getApplicationParameters();
-        ////std::string dagString = std::string(reinterpret_cast<const char*>(dagParameterFromData.value()), dagParameterFromData.value_size());
-        ////m_dagObject = json::parse(dagString);
-        ////std::cout << ("Interest parameter head: " << dagObject["head"] << ", m_name attribute: " << m_name.ndn::Name::toUri());
-        ////std::string head = dagObject["head"];
 
     char index = -1;
     for (auto& x : m_dagObject["dag"].items())
