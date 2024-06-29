@@ -77,7 +77,9 @@ public:
     std::cout << "Sink service is: " << sinkService << std::endl;
 
 
-    Name interestName("/interCACHE/tempName");
+    std::string prefixString(PREFIX);
+    prefixString.append("/tempName");
+    Name interestName(prefixString);
     interestName.appendVersion();
     Interest interest(interestName);
     //interest.setMustBeFresh(true);
@@ -111,11 +113,15 @@ public:
     }
     else if (m_orchestrate == 1){ // orchestration method A
       dagObject["head"] = "/serviceOrchestration";
-      interest.setName("/interCACHE/serviceOrchestration");
+      prefixString = PREFIX;
+      prefixString.append("/serviceOrchestration");
+      interest.setName(prefixString);
     }
     else if (m_orchestrate == 2){ // orchestration method B
       dagObject["head"] = "/serviceOrchestration/dag";
-      interest.setName("/interCACHE/serviceOrchestration/dag");
+      prefixString = PREFIX;
+      prefixString.append("/serviceOrchestration/dag");
+      interest.setName(prefixString);
     }
     else
     {

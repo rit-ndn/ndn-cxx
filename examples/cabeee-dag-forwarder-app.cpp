@@ -50,7 +50,7 @@ public:
     m_PREFIX = PREFIX;
     std::string fullPrefix(PREFIX);
     fullPrefix.append(servicePrefix);
-    m_name = servicePrefix;
+    //m_name = servicePrefix;
     m_service = servicePrefix;
     std::cout << "Forwarder listening to: " << fullPrefix << '\n';
     m_face.setInterestFilter(fullPrefix,
@@ -593,7 +593,6 @@ private:
   
   }
 
-//-----------------------------------------------------------------------------------------------------
 
 
   void
@@ -625,7 +624,7 @@ private:
 
   char* m_PREFIX;
 
-  ndn::Name m_name;
+  //ndn::Name m_name;
   std::string m_nameUri;
   ndn::Name m_nameAndDigest;
   ndn::Name m_service;
