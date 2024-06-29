@@ -130,6 +130,28 @@ private:
   {
     std::cout << ">> I: " << interest << std::endl;
 
+    if (interest.getName() == "/interCACHE/serviceOrchestration/reset")
+    {
+      //reset variables, generate data packet response and return
+      std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
+      m_dagOrchTracker.clear();
+      m_listOfServicesWithInputs.clear();
+      m_listOfRootServices.clear();
+      m_listOfSinkNodes.clear();
+
+      // Create Data packet
+      auto data = std::make_shared<Data>();
+      data->setName(interest.getName());
+      data->setFreshnessPeriod(10_s);
+      data->setContent("Orchestrator data structures have been reset!"); // the content of this data message is not important. We just want to respond to clear out PIT entries
+      m_keyChain.sign(*data, signingWithSha256());
+      // Return Data packet to the requester
+      std::cout << "<< D: " << *data << std::endl;
+      m_face.put(*data);
+
+      return;
+    }
+
     // decode the DAG string contained in the application parameters, so we can generate the new interest(s)
     //extract custom parameter from interest packet
     auto dagParameterFromInterest = interest.getApplicationParameters();

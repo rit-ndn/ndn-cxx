@@ -139,7 +139,7 @@ private:
       
       // Create new Data packet
       auto new_data = std::make_shared<Data>();
-      new_data->setName(m_nameAndDigest);
+      new_data->setName(interest.getName());
       new_data->setFreshnessPeriod(9_s);
       unsigned char myBuffer[1024];
       // write to the buffer
