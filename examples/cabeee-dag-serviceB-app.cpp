@@ -173,12 +173,12 @@ private:
     // IF we received a data request interest (ex: /service1/dataRequest/0/sensor), then generate the interest
     //else, continue below since it is a regular interest for the service itself
     ndn::Name nameAndDigest = interest.getName();  // store the name with digest
-    std::string nameUri = nameAndDigest.getSubName(1,1).toUri(); // extract 1 component starting from component 1, and then convert to Uri string
+    std::string nameUri = nameAndDigest.getSubName(2,1).toUri(); // extract 1 component starting from component 2, and then convert to Uri string
     std::cout << "  NAME COMPONENT 1: " << nameUri << std::endl;
     if (nameUri == "/dataRequest")
     {
       //generate interest for sensor
-      std::string requestNameUri = nameAndDigest.getSubName(2,2).toUri(); // extract 2 components starting from component 2, and then convert to Uri string
+      std::string requestNameUri = nameAndDigest.getSubName(3,2).toUri(); // extract 2 components starting from component 3, and then convert to Uri string
       requestNameUri = "/serviceOrchestration/data" + requestNameUri + m_nameUri; // ask for requestNameUri data, and let the orchestrator know who it's coming from (so it can me marked as txed when it responds)
       std::cout << "Interest was for dataRequest, thus generating interest for " << requestNameUri << std::endl;
 
@@ -205,7 +205,7 @@ private:
         // send stored result
         // Create new Data packet
         auto new_data = std::make_shared<Data>();
-        new_data->setName(nameAndDigest);
+        new_data->setName(m_nameAndDigest);
         new_data->setFreshnessPeriod(9_s);
         unsigned char myBuffer[1024];
         // write to the buffer

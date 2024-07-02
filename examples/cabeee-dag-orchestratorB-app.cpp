@@ -53,6 +53,7 @@ public:
     //m_name = servicePrefix;
     //m_service = servicePrefix;
     std::cout << "OrchestratorB listening to: " << fullPrefix << '\n';
+    m_serviceInputIndex = 0;
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&OrchestratorB::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
@@ -374,7 +375,10 @@ private:
     std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
-    std::string rxedDataName = (data.getName()).getPrefix(-1).toUri(); // remove the last component of the name (the parameter digest) so we have just the raw name
+    //std::string rxedDataName = (data.getName()).getPrefix(-1).toUri(); // remove the last component of the name (the parameter digest) so we have just the raw name
+    //std::string rxedDataName = (data.getName()).getSubName(1,1).toUri(); // extract 1 component starting from component 1, and then convert to Uri string
+    std::string rxedDataName = (data.getName()).getPrefix(-1).getSubName(1).toUri(); // remove the 0th component of the name (/interCACHE PREFIX)
+    std::cout << "   Service name is " << rxedDataName << ", using this name to analyze data structure of received inputs.\n";
 
     std::cout << "Storing the received result at m_vectorOfServiceInputs[" << std::to_string(m_serviceInputIndex) << "]\n";
     // store the received result, so we can later send it to downstream services
@@ -407,7 +411,7 @@ private:
         }
       }
     }
-    //std::cout << "Updated dagOrchTracker data structure: " << std::setw(2) << m_dagOrchTracker << '\n';
+    std::cout << "Updated dagOrchTracker data structure: " << std::setw(2) << m_dagOrchTracker << '\n';
     m_serviceInputIndex++; // get it ready for the next data input that we receive
 
 
