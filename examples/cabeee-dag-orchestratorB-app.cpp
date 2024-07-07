@@ -131,7 +131,9 @@ private:
   {
     std::cout << ">> I: " << interest << std::endl;
 
-    if (interest.getName() == "/interCACHE/serviceOrchestration/reset") // TODO: don't hardcode the PREFIX
+    std::string resetPrefix(m_PREFIX);
+    resetPrefix.append("/serviceOrchestration/reset");
+    if (interest.getName() == resetPrefix)
     {
       //reset variables, generate data packet response and return
       std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
