@@ -64,11 +64,18 @@ sleep 1; ssh cabeee@192.168.20.144 'nfdc route add /interCACHE udp://192.168.20.
 sleep 1; ssh cabeee@192.168.20.147 'nfdc route add /interCACHE udp://192.168.20.147 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.147 'nfdc route add /interCACHE/sensor udp://192.168.20.151 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.147 'nfdc route add /interCACHE/service2 udp://192.168.20.151 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.147 'nfdc route add /interCACHE/service4 udp://192.168.20.151 >/dev/null 2>&1 &'
 
 sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE udp://192.168.20.151 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE/sensor udp://192.168.20.145 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE/service1 udp://192.168.20.147 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE/service3 udp://192.168.20.147 >/dev/null 2>&1 &'
-sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE/service4 udp://192.168.20.147 >/dev/null 2>&1 &'
+
+sleep 1; ssh cabeee@192.168.20.145 'nfdc route add /interCACHE udp://192.168.20.145 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.145 'nfdc route add /interCACHE/service1 udp://192.168.20.151 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.145 'nfdc route add /interCACHE/service2 udp://192.168.20.151 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.145 'nfdc route add /interCACHE/service3 udp://192.168.20.151 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.145 'nfdc route add /interCACHE/service4 udp://192.168.20.151 >/dev/null 2>&1 &'
 
 # 4 DAG - Orchestrator A
 # start producer application
@@ -112,12 +119,12 @@ sleep 1; ssh cabeee@192.168.20.151 'nfdc route add /interCACHE/service4 udp://19
 
 # 4 DAG - interCACHE Forwarder
 # start producer application
-sleep 1; ssh cabeee@192.168.20.151 '~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.145 '~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &'
 # start forwarder application(s)
 sleep 1; ssh cabeee@192.168.20.147 '~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.151 '~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &'
 sleep 1; ssh cabeee@192.168.20.147 '~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &'
-sleep 1; ssh cabeee@192.168.20.147 '~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &'
+sleep 1; ssh cabeee@192.168.20.151 '~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &'
 # start consumer application (locally so that we see the final print statements)
 sleep 1; ~/mini-ndn/dl/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0
 
