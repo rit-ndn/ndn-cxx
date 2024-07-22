@@ -60,24 +60,58 @@ ssh ${username}@${jetsonNanoETHIP} "nfd-start >/dev/null 2>&1 &"
 
 
 # create the faces
-sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc face create remote ether://[${rPi3ETHMAC}] local dev://${lenovoETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc face create remote ether://[${lenovoETHMAC}] local dev://${rPi3ETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc face create remote ether://[${jetsonNanoUSBETHMAC}] local dev://${rPi3USBETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc face create remote ether://[${rPi3USBETHMAC}] local dev://${jetsonNanoUSBETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc face create remote udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc face create remote udp://${lenovoWiFiIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc face create remote udp://${jetsonNanoETHIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc face create remote udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
 
 
 # add routes for all the PREFIXes to all nodes
-sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE ether://[${rPi3ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
 
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE ether://[${rPi3ETHMAC}] >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/sensor ether://[${jetsonNanoUSBETHMAC}] >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service2 ether://[${jetsonNanoUSBETHMAC}] >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service4 ether://[${jetsonNanoUSBETHMAC}] >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service1 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service3 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service1 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service3 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
 
-sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE ether://[${jetsonNanoUSBETHMAC}] >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE/service1 ether://[${rPi3USBETHMAC}] >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE/service3 ether://[${rPi3USBETHMAC}] >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service1 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service3 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
 
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service1 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service3 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+
+#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service1 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service3 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE udp://${rPi4WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/sensor udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service2 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE/service4 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/sensor udp://${jetsonNanoETHIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service2 udp://${jetsonNanoETHIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "nfdc route add /interCACHE/service4 udp://${jetsonNanoETHIP} >/dev/null 2>&1 &"
+
+sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE udp://${jetsonNanoETHIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE/service1 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonNanoETHIP} "nfdc route add /interCACHE/service3 udp://${rPi3WiFiIP} >/dev/null 2>&1 &"
 
 # 4 DAG - Orchestrator A
 # start producer application
@@ -151,7 +185,6 @@ sleep ${sleep}; ssh ${username}@${lenovoWiFiIP} "~/mini-ndn/dl/ndn-cxx/build/exa
 
 
 
-# stop NFD on all devices
 ssh ${username}@${lenovoWiFiIP} "nfd-stop >/dev/null 2>&1 &"
 ssh ${username}@${rPi3WiFiIP} "nfd-stop >/dev/null 2>&1 &"
 #ssh ${username}@${rPi4WiFiIP} "nfd-stop >/dev/null 2>&1 &"
