@@ -170,11 +170,11 @@ sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabe
 
 
 # stop NFD on all devices to clear caches and forwarding table entries
-ssh ${username}@${rPi4WiFiIP} "nfd-stop >/dev/null 2>&1 &"
-ssh ${username}@${rtr3WiFiIP} "nfd-stop >/dev/null 2>&1 &"
-ssh ${username}@${rtr2WiFiIP} "nfd-stop >/dev/null 2>&1 &"
-ssh ${username}@${rtr1WiFiIP} "nfd-stop >/dev/null 2>&1 &"
-ssh ${username}@${jetsonETHIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rPi4WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rtr3WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rtr2WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rtr1WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${jetsonETHIP} "nfd-stop >/dev/null 2>&1 &"
 
 
 

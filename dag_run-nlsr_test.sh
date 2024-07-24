@@ -59,65 +59,87 @@ sleep=0.1
 
 # stop NFD on all devices to clear caches and forwarding table entries
 ssh ${username}@${rPi4WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+ssh ${username}@${rtr3WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+ssh ${username}@${rtr2WiFiIP} "nfd-stop >/dev/null 2>&1 &"
 ssh ${username}@${rtr1WiFiIP} "nfd-stop >/dev/null 2>&1 &"
 ssh ${username}@${jetsonETHIP} "nfd-stop >/dev/null 2>&1 &"
 
 # start NFD on all devices
 ssh ${username}@${rPi4WiFiIP} "nfd-start >/dev/null 2>&1 &"
+ssh ${username}@${rtr3WiFiIP} "nfd-start >/dev/null 2>&1 &"
+ssh ${username}@${rtr2WiFiIP} "nfd-start >/dev/null 2>&1 &"
 ssh ${username}@${rtr1WiFiIP} "nfd-start >/dev/null 2>&1 &"
 ssh ${username}@${jetsonETHIP} "nfd-start >/dev/null 2>&1 &"
 
 
 # create the faces
-sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${rPi4ETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${rPi4ETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${jetsonUSBETHMAC}] local dev://${rtr1USBETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc face create remote ether://[${rtr1USBETHMAC}] local dev://${jetsonUSBETHinterface} persistency permanent >/dev/null 2>&1 &"
-
-
-# add routes for all the PREFIXes to all nodes
-#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc route add /interCACHE ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
-
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/sensor ether://[${jetsonUSBETHMAC}] >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service2 ether://[${jetsonUSBETHMAC}] >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service4 ether://[${jetsonUSBETHMAC}] >/dev/null 2>&1 &"
-
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc route add /interCACHE ether://[${jetsonUSBETHMAC}] >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc route add /interCACHE/service1 ether://[${rtr1USBETHMAC}] >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc route add /interCACHE/service3 ether://[${rtr1USBETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "nfdc face create remote ether://[${rtr3ETHMAC}] local dev://${rPi4ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc face create remote ether://[${rPi4ETHMAC}] local dev://${rtr3ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc face create remote ether://[${rtr2ETHMAC}] local dev://${rtr3ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc face create remote ether://[${rtr3ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${rtr2ETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${jetsonETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${jetsonETHinterface} persistency permanent >/dev/null 2>&1 &"
 
 
 
+
+
+# 4 DAG - Orchestrator A
+# start producer application
+#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+# start orchestratorA application
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+# start forwarder application(s)
+#sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service1 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service2 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service3 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service4 >/dev/null 2>&1 &"
+# start consumer application (not in the background, so that we see the final print statements)
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 1"
+
+
+# 4 DAG - Orchestrator B
+# start producer application
+#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+# start orchestratorA application
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+# start forwarder application(s)
+#sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service1 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service2 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service3 >/dev/null 2>&1 &"
+#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service4 >/dev/null 2>&1 &"
+# start consumer application (not in the background, so that we see the final print statements)
+#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 2"
 
 
 # 4 DAG - interCACHE Forwarder
 # start producer application
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
 # start forwarder application(s)
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
 
 
 
 
+sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr-consumer.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr-rtr3.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr-rtr2.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr-rtr1.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonETHIP} "sudo nlsr -f ~/ndn/NLSR/nlsr-producer.conf >/dev/null 2>&1 &"
 
 
 
-sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${jetsonETHIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
+sleep 30
 
-
-
-
-sleep 1
 
 
 # start consumer application (not in the background, so that we see the final print statements)
-#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/mini-ndn/dl/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0"
+sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0"
 
 
 
@@ -127,6 +149,8 @@ sleep 1
 
 # stop NFD on all devices
 #ssh ${username}@${rPi4WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rtr3WiFiIP} "nfd-stop >/dev/null 2>&1 &"
+#ssh ${username}@${rtr2WiFiIP} "nfd-stop >/dev/null 2>&1 &"
 #ssh ${username}@${rtr1WiFiIP} "nfd-stop >/dev/null 2>&1 &"
 #ssh ${username}@${jetsonETHIP} "nfd-stop >/dev/null 2>&1 &"
 
