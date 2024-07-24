@@ -95,9 +95,9 @@ sleep ${sleep}; ssh ${username}@${jetsonETHIP} "nfdc face create remote ether://
 
 
 
-#sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "sudo nlsr -f ~/mini-ndn/dl/NLSR/nlsr.conf >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${jetsonETHIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi4WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${jetsonETHIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rPi3WiFiIP} "sudo nlsr -f ~/ndn/NLSR/nlsr.conf >/dev/null 2>&1 &"
 
 
 
