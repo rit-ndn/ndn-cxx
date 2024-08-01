@@ -93,8 +93,8 @@ sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc face create remote ether://[
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc face create remote ether://[${rtr3ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${rtr2ETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${consumerETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${consumerETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc face create remote ether://[${producerETHMAC}] local dev://${rtr1ETHinterface} persistency permanent >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${producerETHinterface} persistency permanent >/dev/null 2>&1 &"
 
 
 
