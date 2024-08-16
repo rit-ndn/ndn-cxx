@@ -86,7 +86,7 @@ private:
 
 
     Interest interest(m_PREFIX + interestName);
-    interest.setMustBeFresh(true);
+    interest.setMustBeFresh(true); // forcing fresh data allows us to run "non-caching" scenarios back-to-back (waiting for data packet lifetime to expire), and we won't be utilizing cached packets from a previous run.
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
 
