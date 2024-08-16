@@ -80,7 +80,8 @@ public:
     Name interestName("/interCACHE/tempName");
     interestName.appendVersion();
     Interest interest(interestName);
-    //interest.setMustBeFresh(true);
+    //interest.setMustBeFresh(true); // forcing fresh data allows us to run "non-caching" scenarios back-to-back (waiting for data packet lifetime to expire), and we won't be utilizing cached packets from a previous run.
+    interest.setMustBeFresh(false);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
     m_orchestrate = atoi(orchestrationType);

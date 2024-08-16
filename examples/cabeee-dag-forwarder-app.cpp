@@ -86,7 +86,7 @@ private:
 
 
     Interest interest(m_PREFIX + interestName);
-    //interest.setMustBeFresh(true);
+    interest.setMustBeFresh(true);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
 

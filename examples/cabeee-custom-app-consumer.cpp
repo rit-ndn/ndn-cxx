@@ -82,7 +82,7 @@ public:
     Name interestName(prefixString);
     interestName.appendVersion();
     Interest interest(interestName);
-    //interest.setMustBeFresh(true);
+    interest.setMustBeFresh(true); // forcing fresh data allows us to run "non-caching" scenarios back-to-back (waiting for data packet lifetime to expire), and we won't be utilizing cached packets from a previous run.
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
     m_orchestrate = atoi(orchestrationType);
@@ -155,7 +155,7 @@ public:
     //std::cout << "myDagString: " << std::setw(2) << myDagString << std::endl;
     json m_dagObject;
     m_dagObject = json::parse(myDagString);
-    std::cout << "Full DAG being sent: " << std::setw(2) << m_dagObject << std::endl;
+    //std::cout << "Full DAG being sent: " << std::setw(2) << m_dagObject << std::endl;
 
 
     m_face.expressInterest(interest,
