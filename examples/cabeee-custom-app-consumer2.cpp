@@ -55,14 +55,14 @@ public:
     startTime = std::chrono::steady_clock::now();
 
     m_dagPath = workflowFile;
-    std::cout << "Workflow File: " << m_dagPath << std::endl;
+    std::cout << "Consumer is using Workflow File: " << m_dagPath << std::endl;
     std::ifstream f(m_dagPath);
     json dagObject = json::parse(f);
 
     // here we generate just the first interest(s) according to the workflow
     // to do this, we must discover which services in the DAG are "sink" services (services which feed the end consumer)
 
-    std::cout << "Looking for sink service!" << std::endl;
+    //std::cout << "Looking for sink service!" << std::endl;
     std::string sinkService;
     for (auto& x : dagObject["dag"].items())
     {
@@ -74,7 +74,7 @@ public:
         }
       }
     }
-    std::cout << "Sink service is: " << sinkService << std::endl;
+    //std::cout << "Sink service is: " << sinkService << std::endl;
 
 
     std::string prefixString(PREFIX);
@@ -143,7 +143,7 @@ public:
 
 
 
-    std::cout << "Sending Interest " << interest << std::endl;
+    //std::cout << "Sending Interest " << interest << std::endl;
 
     //bool dagParameterDigestValid = interest.isParametersDigestValid();
     //std::cout << "Fwd: Interest parameter digest is valid: " << dagParameterDigestValid << std::endl;
