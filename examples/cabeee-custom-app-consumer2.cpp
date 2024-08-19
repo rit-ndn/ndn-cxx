@@ -77,7 +77,9 @@ public:
     std::cout << "Sink service is: " << sinkService << std::endl;
 
 
-    Name interestName("/interCACHE/tempName");
+    std::string prefixString(PREFIX);
+    prefixString.append("/tempName");
+    Name interestName(prefixString);
     interestName.appendVersion();
     Interest interest(interestName);
     //interest.setMustBeFresh(true); // forcing fresh data allows us to run "non-caching" scenarios back-to-back (waiting for data packet lifetime to expire), and we won't be utilizing cached packets from a previous run.
@@ -112,11 +114,15 @@ public:
     }
     else if (m_orchestrate == 1){ // orchestration method A
       dagObject["head"] = "/serviceOrchestration";
-      interest.setName("/interCACHE/serviceOrchestration");
+      prefixString = PREFIX;
+      prefixString.append("/serviceOrchestration");
+      interest.setName(prefixString);
     }
     else if (m_orchestrate == 2){ // orchestration method B
       dagObject["head"] = "/serviceOrchestration/dag";
-      interest.setName("/interCACHE/serviceOrchestration/dag");
+      prefixString = PREFIX;
+      prefixString.append("/serviceOrchestration/dag");
+      interest.setName(prefixString);
     }
     else
     {
@@ -150,7 +156,7 @@ public:
     //std::cout << "myDagString: " << std::setw(2) << myDagString << std::endl;
     json m_dagObject;
     m_dagObject = json::parse(myDagString);
-    std::cout << "Full DAG being sent: " << std::setw(2) << m_dagObject << std::endl;
+    //std::cout << "Full DAG being sent: " << std::setw(2) << m_dagObject << std::endl;
 
 
     m_face.expressInterest(interest,
