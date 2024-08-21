@@ -84,7 +84,7 @@ private:
     // Sending one Interest packet out //
     /////////////////////////////////////
 
-    std::cout << "Should send new interest now" << std::endl;
+    //std::cout << "Should send new interest now" << std::endl;
 
 
 
@@ -107,7 +107,7 @@ private:
     //add modified DAG workflow as a parameter to the new interest
     interest.setApplicationParameters(dagApplicationParameters);
 
-    std::cout << "ServiceB: Sending Interest packet for " << interest << std::endl;
+    //std::cout << "ServiceB: Sending Interest packet for " << interest << std::endl;
 
     m_face.expressInterest(interest,
                            std::bind(&ServiceB::onData, this,  _1, _2),
@@ -131,7 +131,7 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    std::cout << ">> I: " << interest << std::endl;
+    //std::cout << ">> I: " << interest << std::endl;
 
     if (m_extracted == false)
     {
@@ -165,7 +165,7 @@ private:
       }
       //std::cout << "ServiceB dagServTracker data structure: " << std::setw(2) << m_dagServTracker << '\n';
 
-      std::cout << "Creating data for name: " << m_nameAndDigest << std::endl;  // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
+      //std::cout << "Creating data for name: " << m_nameAndDigest << std::endl;  // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
                                                                                 // We use m_nameAndDigest to store the old name with the digest.
       m_extracted = true;
     }
@@ -174,13 +174,13 @@ private:
     //else, continue below since it is a regular interest for the service itself
     ndn::Name nameAndDigest = interest.getName();  // store the name with digest
     std::string nameUri = nameAndDigest.getSubName(2,1).toUri(); // extract 1 component starting from component 2, and then convert to Uri string
-    std::cout << "  NAME COMPONENT 1: " << nameUri << std::endl;
+    //std::cout << "  NAME COMPONENT 1: " << nameUri << std::endl;
     if (nameUri == "/dataRequest")
     {
       //generate interest for sensor
       std::string requestNameUri = nameAndDigest.getSubName(3,2).toUri(); // extract 2 components starting from component 3, and then convert to Uri string
       requestNameUri = "/serviceOrchestration/data" + requestNameUri + m_nameUri; // ask for requestNameUri data, and let the orchestrator know who it's coming from (so it can me marked as txed when it responds)
-      std::cout << "Interest was for dataRequest, thus generating interest for " << requestNameUri << std::endl;
+      //std::cout << "Interest was for dataRequest, thus generating interest for " << requestNameUri << std::endl;
 
       // generate the interest for this input
       auto dagParameterFromInterest = interest.getApplicationParameters();
@@ -201,7 +201,7 @@ private:
       // OR we can let the content store caching deal with responding
       if (m_done == true)
       {
-        std::cout << "    ServiceB: We already ran this service before. Responding with internally stored result!" << std::endl;
+        //std::cout << "    ServiceB: We already ran this service before. Responding with internally stored result!" << std::endl;
         // send stored result
         // Create new Data packet
         auto new_data = std::make_shared<Data>();
@@ -233,7 +233,7 @@ private:
         m_keyChain.sign(*new_data, signingWithSha256());
 
         // Return Data packet to the requester
-        std::cout << "<< D: " << *new_data << std::endl;
+        //std::cout << "<< D: " << *new_data << std::endl;
         m_face.put(*new_data);
 
         return;
@@ -247,7 +247,7 @@ private:
       {
         if (serviceInput.value() == 0)
         {
-          std::cout << "    ServiceB: ERROR! We should have already received this input, but somehow haven't: " << serviceInput.key() << std::endl;
+          //std::cout << "    ServiceB: ERROR! We should have already received this input, but somehow haven't: " << serviceInput.key() << std::endl;
           // generate the interest for this input
           std::string dagString = m_dagObject.dump();
           sendInterest(serviceInput.key(), dagString);
@@ -271,8 +271,8 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
-    std::cout << "Data Content: " << data.getContent().value() << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
     std::string rxedDataName;
@@ -286,7 +286,7 @@ private:
     std::string inputNumString;
     std::string requestedService;
     std::string requestorService;
-    unsigned char inputNum;
+    char inputNum = -2; // just initialize to negative numeber that is not -1. It will be compared below, and if it is still -2, something is not working properly
     if (firstTwo == "/serviceOrchestration/data")
     {
       inputNumString   = nameAndDigest.getSubName(3,1).toUri(); // extract 1 components starting from component 3, and then convert to Uri string
@@ -294,7 +294,7 @@ private:
       requestorService = nameAndDigest.getSubName(5,1).toUri(); // extract 1 components starting from component 5, and then convert to Uri string
       inputNumString = inputNumString.erase(0,1); // remove the "/" at the beginning of the Uri Name, to leave just the number (still as a string)
       inputNum = stoi(inputNumString);
-      std::cout << "Service received data for: " << firstTwo << ", requested service name: " << requestedService << ", stored at index " << inputNumString << ", by requestor: " << requestorService << std::endl;
+      //std::cout << "Service received data for: " << firstTwo << ", requested service name: " << requestedService << ", stored at index " << inputNumString << ", by requestor: " << requestorService << std::endl;
       rxedDataName = requestedService;
     }
 
@@ -366,7 +366,7 @@ private:
     if (allInputsReceived == 1)
     {
       //"RUN" the service, and create a new data packet to respond downstream
-      std::cout << "Running service " << m_service << std::endl;
+      //std::cout << "Running service " << m_service << std::endl;
 
       // run operation. First we need to figure out what service this is, so we know the operation. This screams to be a function pointer! For now just use if's
 
@@ -466,7 +466,7 @@ private:
       
       // we stored the result so we can respond later when the main service interest comes in!!
 
-      std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)m_serviceOutput << std::endl;
+      //std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)m_serviceOutput << std::endl;
     
       m_done = true;
 
@@ -487,10 +487,10 @@ private:
       //m_data.setContent(myBuffer, 1024);
   */
     }
-    else
-    {
-      std::cout << "    Even though we received data packet, we are still waiting for more inputs!" << std::endl;
-    }
+    //else
+    //{
+      //std::cout << "    Even though we received data packet, we are still waiting for more inputs!" << std::endl;
+    //}
 
 
   }

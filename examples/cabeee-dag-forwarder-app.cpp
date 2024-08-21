@@ -81,7 +81,7 @@ private:
     // Sending one Interest packet out //
     /////////////////////////////////////
 
-    std::cout << "Should send new interest now" << std::endl;
+    //std::cout << "Should send new interest now" << std::endl;
 
 
 
@@ -223,7 +223,7 @@ private:
 
 
 
-    std::cout << "Forwarder: Sending Interest packet for " << interest << std::endl;
+    //std::cout << "Forwarder: Sending Interest packet for " << interest << std::endl;
 
     m_face.expressInterest(interest,
                            std::bind(&Forwarder::onData, this,  _1, _2),
@@ -247,7 +247,7 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    std::cout << ">> I: " << interest << std::endl;
+    //std::cout << ">> I: " << interest << std::endl;
 
     // decode the DAG string contained in the application parameters, so we can generate the new interest(s)
     //extract custom parameter from interest packet
@@ -271,7 +271,7 @@ private:
     //std::cout << ("Interest parameter sensor feeds " << (dagObject["dag"]["/sensor"].size()) << " services: " << dagObject["dag"]["/sensor"]);
     //std::cout << ("Interest parameter s1 feeds " << (dagObject["dag"]["/S1"].size()) << " services: " << dagObject["dag"]["/S1"]);
 
-    std::cout << "Full DAG as received: " << std::setw(2) << m_dagObject << std::endl;
+    //std::cout << "Full DAG as received: " << std::setw(2) << m_dagObject << std::endl;
 
 
     // create the tracking data structure using JSON
@@ -312,7 +312,7 @@ private:
       {
         // generate the interest for this input
         std::string dagString = m_dagObject.dump();
-        std::cout << "Forwarder: Generating interest for " << serviceInput.key() << '\n';
+        //std::cout << "Forwarder: Generating interest for " << serviceInput.key() << '\n';
         sendInterest(serviceInput.key(), dagString);
       }
     }
@@ -340,8 +340,8 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
-    std::cout << "Data Content: " << data.getContent().value() << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
 
@@ -351,7 +351,7 @@ private:
     pContent++;  // now this points to the first size octet
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
-    std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
+    //std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -440,7 +440,7 @@ private:
 
       //"RUN" the service, and create a new data packet to respond downstream
       //std::cout << ("Fake running service " << m_service);
-      std::cout << "Running service " << m_service << std::endl;
+      //std::cout << "Running service " << m_service << std::endl;
 
       // run operation. First we need to figure out what service this is, so we know the operation. This screams to be a function pointer! For now just use if's
 
@@ -538,7 +538,7 @@ private:
               (m_vectorOfServiceInputs[19]);
       }
     
-      std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)serviceOutput << std::endl;
+      //std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)serviceOutput << std::endl;
   
       // this following line is for linear workflows only!
       //now add the service name in front of the data name
@@ -546,7 +546,7 @@ private:
       //std::cout << ("Creating data for new name: " << new_name);
       // for dag workflows, FOR NOW we just generate the data packet with the name of the service we ran. We don't support repeated services yet. For that we need higharchical names/results such as "/S2/S1/sensor" for example
 
-      std::cout << "Creating data for name: " << m_nameAndDigest << std::endl;  // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
+      //std::cout << "Creating data for name: " << m_nameAndDigest << std::endl;  // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
                                                                     // We use m_nameAndDigest to store the old name with the digest.
 
 
@@ -581,14 +581,14 @@ private:
       m_keyChain.sign(*new_data, signingWithSha256());
 
       // Return Data packet to the requester
-      std::cout << "<< D: " << *new_data << std::endl;
+      //std::cout << "<< D: " << *new_data << std::endl;
       m_face.put(*new_data);
 
     }
-    else
-    {
-      std::cout << "    Even though we received data packet, we are still waiting for more inputs!" << std::endl;
-    }
+    //else
+    //{
+      //std::cout << "    Even though we received data packet, we are still waiting for more inputs!" << std::endl;
+    //}
 
   
   }

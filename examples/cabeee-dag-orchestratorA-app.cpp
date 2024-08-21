@@ -81,7 +81,7 @@ private:
     // Sending one Interest packet out //
     /////////////////////////////////////
 
-    std::cout << "Should send new interest now" << std::endl;
+    //std::cout << "Should send new interest now" << std::endl;
 
 
 
@@ -106,7 +106,7 @@ private:
     //add modified DAG workflow as a parameter to the new interest
     interest.setApplicationParameters(dagApplicationParameters);
 
-    std::cout << "OrchestratorA: Sending Interest packet for " << interest << std::endl;
+    //std::cout << "OrchestratorA: Sending Interest packet for " << interest << std::endl;
 
     m_face.expressInterest(interest,
                            std::bind(&OrchestratorA::onData, this,  _1, _2),
@@ -128,14 +128,14 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    std::cout << ">> I: " << interest << std::endl;
+    //std::cout << ">> I: " << interest << std::endl;
 
     std::string resetPrefix(m_PREFIX);
     resetPrefix.append("/serviceOrchestration/reset");
     if (interest.getName() == resetPrefix)
     {
       //reset variables, generate data packet response and return
-      std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
+      //std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
       m_dagOrchTracker.clear();
       m_listOfServicesWithInputs.clear();
       m_listOfRootServices.clear();
@@ -148,7 +148,7 @@ private:
       data->setContent("Orchestrator data structures have been reset!"); // the content of this data message is not important. We just want to respond to clear out PIT entries
       m_keyChain.sign(*data, signingWithSha256());
       // Return Data packet to the requester
-      std::cout << "<< D: " << *data << std::endl;
+      //std::cout << "<< D: " << *data << std::endl;
       m_face.put(*data);
 
       return;
@@ -178,7 +178,7 @@ private:
     //std::cout << ("Interest parameter sensor feeds " << (dagObject["dag"]["/sensor"].size()) << " services: " << dagObject["dag"]["/sensor"]);
     //std::cout << ("Interest parameter s1 feeds " << (dagObject["dag"]["/S1"].size()) << " services: " << dagObject["dag"]["/S1"]);
 
-    std::cout << "Full DAG as received: " << std::setw(2) << m_dagObject << std::endl;
+    //std::cout << "Full DAG as received: " << std::setw(2) << m_dagObject << std::endl;
 
 
 
@@ -248,7 +248,7 @@ private:
     for (auto rootService : m_listOfRootServices)
     {
       // generate new interest for root services if one has not yet been generated
-      std::cout << "Generating interest for: " << rootService << std::endl;
+      //std::cout << "Generating interest for: " << rootService << std::endl;
 
       // We need to see if this interest has already been generated. If so, don't increment
       // if this is a new interest (if interest is not in our list of generated interests)
@@ -274,8 +274,8 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
-    std::cout << "Data Content: " << data.getContent().value() << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
 
@@ -285,7 +285,7 @@ private:
     pContent++;  // now this points to the first size octet
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
-    std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
+    //std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -357,7 +357,7 @@ private:
       {
         if (sinkNode == serviceFeed.key())
         {
-          std::cout << "Final data packet! Creating data for name: " << m_nameAndDigest << std::endl;   // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
+          //std::cout << "Final data packet! Creating data for name: " << m_nameAndDigest << std::endl;   // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
                                                                                             // We use m_nameAndDigest to store the old name with the digest.
 
           // Create new Data packet
@@ -387,7 +387,7 @@ private:
           m_keyChain.sign(*new_data, signingWithSha256());
 
           // Return Data packet to the requester
-          std::cout << "<< D: " << *new_data << std::endl;
+          //std::cout << "<< D: " << *new_data << std::endl;
           m_face.put(*new_data);
 
         }

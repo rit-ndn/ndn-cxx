@@ -82,7 +82,7 @@ private:
     // Sending one Interest packet out //
     /////////////////////////////////////
 
-    std::cout << "Should send new interest now" << std::endl;
+    //std::cout << "Should send new interest now" << std::endl;
 
 
 
@@ -107,7 +107,7 @@ private:
     //add modified DAG workflow as a parameter to the new interest
     interest.setApplicationParameters(dagApplicationParameters);
 
-    std::cout << "OrchestratorB: Sending Interest packet for " << interest << std::endl;
+    //std::cout << "OrchestratorB: Sending Interest packet for " << interest << std::endl;
 
     m_face.expressInterest(interest,
                            std::bind(&OrchestratorB::onData, this,  _1, _2),
@@ -129,14 +129,14 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    std::cout << ">> I: " << interest << std::endl;
+    //std::cout << ">> I: " << interest << std::endl;
 
     std::string resetPrefix(m_PREFIX);
     resetPrefix.append("/serviceOrchestration/reset");
     if (interest.getName() == resetPrefix)
     {
       //reset variables, generate data packet response and return
-      std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
+      //std::cout << "<< Orchestrator received interest to reset data structures!" << std::endl;
       m_dagOrchTracker.clear();
       m_vectorOfServiceInputs.clear();
       m_serviceInputIndex = 0;
@@ -151,7 +151,7 @@ private:
       data->setContent("Orchestrator data structures have been reset!"); // the content of this data message is not important. We just want to respond to clear out PIT entries
       m_keyChain.sign(*data, signingWithSha256());
       // Return Data packet to the requester
-      std::cout << "<< D: " << *data << std::endl;
+      //std::cout << "<< D: " << *data << std::endl;
       m_face.put(*data);
 
       return;
@@ -160,7 +160,7 @@ private:
 
     ndn::Name nameAndDigest = interest.getName();
     std::string nameUri = nameAndDigest.getSubName(1,2).toUri(); // extract 2 components starting from component 1, and then convert to Uri string
-    std::cout << "Received Interest packet for " << nameUri << ", full name with digest: " << nameAndDigest << std::endl;
+    //std::cout << "Received Interest packet for " << nameUri << ", full name with digest: " << nameAndDigest << std::endl;
 
     if (nameUri == "/serviceOrchestration/dag") // if interest is for orchestration (from consumer)
     {
@@ -245,7 +245,7 @@ private:
       for (auto rootService : m_listOfRootServices)
       {
         // generate new interest for root services if one has not yet been generated
-        std::cout << "Generating interest for: " << rootService << std::endl;
+        //std::cout << "Generating interest for: " << rootService << std::endl;
 
         // We need to see if this interest has already been generated. If so, don't increment
         // if this is a new interest (if interest is not in our list of generated interests)
@@ -272,23 +272,23 @@ private:
       std::string requestorService = nameAndDigest.getSubName(5,1).toUri(); // extract 1 components starting from component 5, and then convert to Uri string
       inputNumString = inputNumString.erase(0,1); // remove the "/" at the beginning of the Uri Name, to leave just the number (still as a string)
       unsigned char inputNum = stoi(inputNumString);
-      std::cout << "Orchestrator received interest for: " << nameUri << ", service name: " << requestedService << ", stored at index " << inputNumString << ", by requestor: " << requestorService << std::endl;
+      //std::cout << "Orchestrator received interest for: " << nameUri << ", service name: " << requestedService << ", stored at index " << inputNumString << ", by requestor: " << requestorService << std::endl;
 
       // look at data structure and figure out which index is used for the stored result for requestedService
       for (auto& service : m_dagOrchTracker.items())  // for each service in the tracker
       {
         if (service.key() == requestorService)
         {
-          std::cout << "Found requestor service!" << std::endl;
+          //std::cout << "Found requestor service!" << std::endl;
           for (auto& serviceInput : m_dagOrchTracker[(std::string)service.key()]["inputsRxed"].items())
           {
             if (serviceInput.key() == requestedService) // there might be more than one service that uses this input, but we already matched to the requestor above.
             {
-              std::cout << "Found requested service result!" << std::endl;
+              //std::cout << "Found requested service result!" << std::endl;
               unsigned char inputStorageIndex = serviceInput.value();
 
               // send that data at that index as a response for this interest
-              std::cout << "Generating data packet for: " << nameAndDigest.ndn::Name::toUri() << std::endl;
+              //std::cout << "Generating data packet for: " << nameAndDigest.ndn::Name::toUri() << std::endl;
 
               // Create new Data packet
               auto new_data = std::make_shared<Data>();
@@ -320,7 +320,7 @@ private:
               m_keyChain.sign(*new_data, signingWithSha256());
 
               // Return Data packet to the requester
-              std::cout << "<< D: " << *new_data << std::endl;
+              //std::cout << "<< D: " << *new_data << std::endl;
               m_face.put(*new_data);
 
 
@@ -373,16 +373,16 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
-    std::cout << "Data Content: " << data.getContent().value() << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
     //std::string rxedDataName = (data.getName()).getPrefix(-1).toUri(); // remove the last component of the name (the parameter digest) so we have just the raw name
     //std::string rxedDataName = (data.getName()).getSubName(1,1).toUri(); // extract 1 component starting from component 1, and then convert to Uri string
     std::string rxedDataName = (data.getName()).getPrefix(-1).getSubName(1).toUri(); // remove the 0th component of the name (/interCACHE PREFIX)
-    std::cout << "   Service name is " << rxedDataName << ", using this name to analyze data structure of received inputs.\n";
+    //std::cout << "   Service name is " << rxedDataName << ", using this name to analyze data structure of received inputs.\n";
 
-    std::cout << "Storing the received result at m_vectorOfServiceInputs[" << std::to_string(m_serviceInputIndex) << "]\n";
+    //std::cout << "Storing the received result at m_vectorOfServiceInputs[" << std::to_string(m_serviceInputIndex) << "]\n";
     // store the received result, so we can later send it to downstream services
     // TODO: this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
     // and then getting to the first byte (which is all I'm using for data)
@@ -399,7 +399,7 @@ private:
 
 
 
-    std::cout << "Marking down this input as having been received\n";
+    //std::cout << "Marking down this input as having been received\n";
     // mark down this input as having been received for all services that use this data as an input
     // default object value is -1 (not received)
     // any other value (0 and up) means it has been received, and has been stored at the index specified by that value
@@ -467,8 +467,8 @@ private:
             }
             else
             {
-              std::cout << "Generating interest request for data inputs for service " << (std::string)service.key() << '\n';
-              std::cout << "Request will have name: " << service.key() << "/dataRequest/" << std::to_string(inputNum) << (std::string)serviceInput.key() << '\n';
+              //std::cout << "Generating interest request for data inputs for service " << (std::string)service.key() << '\n';
+              //std::cout << "Request will have name: " << service.key() << "/dataRequest/" << std::to_string(inputNum) << (std::string)serviceInput.key() << '\n';
               std::string interestRequestName = (std::string)service.key() + "/dataRequest/" + std::to_string(inputNum) + (std::string)serviceInput.key();
               //name = /service1/dataRequest/sensor
               //name = /service.key()/dataRequest/serviceInput.key()
