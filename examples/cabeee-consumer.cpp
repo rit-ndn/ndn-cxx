@@ -20,7 +20,7 @@
  */
 
 #include <ndn-cxx/face.hpp>
-#include <ndn-cxx/security/validator-config.hpp>
+//#include <ndn-cxx/security/validator-config.hpp>
 
 #include <iostream>
 
@@ -32,10 +32,11 @@ namespace examples {
 class Consumer
 {
 public:
-  Consumer()
-  {
-    m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
-  }
+  //Consumer()
+  //{
+    //m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
+   // m_validator.load("/opt/ndn/cabeee-trust-schema.conf");
+  //}
 
   void
   run(char* prefix)
@@ -65,6 +66,7 @@ private:
     std::cout << "Received Data: " << data << std::endl;
     std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
+    /*
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -72,6 +74,7 @@ private:
                          [] (const Data&, const security::ValidationError& error) {
                            std::cout << "Error authenticating data: " << error << std::endl;
                          });
+    */
   }
 
   void
@@ -88,7 +91,7 @@ private:
 
 private:
   Face m_face;
-  ValidatorConfig m_validator{m_face};
+  //ValidatorConfig m_validator{m_face};
 };
 
 } // namespace examples

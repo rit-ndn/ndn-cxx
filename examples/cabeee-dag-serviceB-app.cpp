@@ -29,7 +29,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-#include <ndn-cxx/security/validator-config.hpp>
+//#include <ndn-cxx/security/validator-config.hpp>
 
 // Enclosing code in ndn simplifies coding (can also use `using namespace ndn`)
 namespace ndn {
@@ -39,10 +39,10 @@ namespace examples {
 class ServiceB
 {
 public:
-  ServiceB()
-  {
-    m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
-  }
+  //ServiceB()
+  //{
+    //m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
+  //}
 
   void
   run(char* PREFIX, char* servicePrefix)
@@ -520,7 +520,7 @@ private:
 
 private:
   Face m_face;
-  ValidatorConfig m_validator{m_face};
+  //ValidatorConfig m_validator{m_face};
   KeyChain m_keyChain;
   ScopedRegisteredPrefixHandle m_certServeHandle;
 

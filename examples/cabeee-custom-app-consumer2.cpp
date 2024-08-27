@@ -20,7 +20,7 @@
  */
 
 #include <ndn-cxx/face.hpp>
-#include <ndn-cxx/security/validator-config.hpp>
+//#include <ndn-cxx/security/validator-config.hpp>
 
 #include <iostream>
 
@@ -43,10 +43,11 @@ namespace examples {
 class Consumer2
 {
 public:
-  Consumer2()
-  {
-    m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
-  }
+  //Consumer2()
+  //{
+    //m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
+    //m_validator.load("/opt/ndn/cabeee-trust-schema.conf");
+  //}
 
   void
   run(char* PREFIX, char* workflowFile, char* orchestrationType)
@@ -187,6 +188,7 @@ private:
     std::cout << "\n  The final answer is: " <<  (int)(*pContent) << std::endl << "\n\n";
   
 
+    /*
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -194,6 +196,7 @@ private:
                          [] (const Data&, const security::ValidationError& error) {
                            std::cout << "Error authenticating data: " << error << std::endl;
                          });
+    */
 
     endTime = std::chrono::steady_clock::now();
     std::chrono::steady_clock::duration serviceLatency = endTime - startTime;
@@ -215,7 +218,7 @@ private:
 
 private:
   Face m_face;
-  ValidatorConfig m_validator{m_face};
+  //ValidatorConfig m_validator{m_face};
   uint16_t m_orchestrate;
   std::string m_dagPath;
   std::chrono::steady_clock::time_point startTime;

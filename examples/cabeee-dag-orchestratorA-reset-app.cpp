@@ -29,7 +29,7 @@
 #include <nlohmann/json.hpp>
 using json = nlohmann::json;
 
-#include <ndn-cxx/security/validator-config.hpp>
+//#include <ndn-cxx/security/validator-config.hpp>
 
 // Enclosing code in ndn simplifies coding (can also use `using namespace ndn`)
 namespace ndn {
@@ -39,10 +39,10 @@ namespace examples {
 class OrchestratorA_reset
 {
 public:
-  OrchestratorA_reset()
-  {
-    m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
-  }
+  //OrchestratorA_reset()
+  //{
+    //m_validator.load("/home/cabeee/mini-ndn/dl/ndn-cxx/examples/cabeee-trust-schema.conf");
+  //}
 
   void
   run(char* PREFIX, char* servicePrefix)
@@ -76,6 +76,7 @@ private:
     ndn::Block myRxedBlock = data.getContent();
     //std::cout << "\OrchestratorA_reset: result = " << myRxedBlock << std::endl << "\n\n";
 
+    /*
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -83,6 +84,7 @@ private:
                          [] (const Data&, const security::ValidationError& error) {
                            std::cout << "Error authenticating data: " << error << std::endl;
                          });
+    */
   }
 
 
@@ -110,7 +112,7 @@ private:
 
 private:
   Face m_face;
-  ValidatorConfig m_validator{m_face};
+  //ValidatorConfig m_validator{m_face};
 };
 
 } // namespace examples
