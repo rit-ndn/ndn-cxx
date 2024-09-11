@@ -278,7 +278,7 @@ private:
     //std::cout << "Forwarder rxedInterestName: " << rxedInterestName << std::endl;
 
 
-    if (m_dagObject == NULL && m_service.toUri() == dagObject["head"])
+    if (m_dagObject.empty() && m_service.toUri() == dagObject["head"])
     {
       // store the m_dagObject that we will use for regular forwarding (not for shortcut optimization)
       m_dagObject = json::parse(dagString);
@@ -705,7 +705,7 @@ private:
   ndn::Name m_nameAndDigest;
   ndn::Name m_service;
   json m_dagServTracker; // with this data structure, we can keep track of WHICH inputs have arrived, rather than just the NUMBER of inputs. (in case one inputs arrives multiple times)
-  json m_dagObject = NULL;
+  json m_dagObject;
   std::vector <unsigned char> m_vectorOfServiceInputs;
 };
 
