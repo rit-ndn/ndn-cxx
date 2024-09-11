@@ -275,7 +275,7 @@ private:
     simpleName = (interest.getName()).getPrefix(-1); // remove the last component of the name (the parameter digest) so we have just the raw name, and convert to Uri string
     simpleName = simpleName.getSubName(1); // remove the first component of the name (/interCACHE)
     std::string rxedInterestName = simpleName.toUri();
-    std::cout << "Forwarder rxedInterestName: " << rxedInterestName << std::endl;
+    //std::cout << "Forwarder rxedInterestName: " << rxedInterestName << std::endl;
 
 
     if (m_dagObject == NULL && m_service.toUri() == dagObject["head"])
@@ -412,7 +412,7 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "Received Data: " << data << std::endl;
+    //std::cout << "Received Data: " << data << std::endl;
     //std::cout << "Data Content: " << data.getContent().value() << std::endl;
 
 
@@ -423,7 +423,7 @@ private:
     pContent++;  // now this points to the first size octet
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
-    std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
+    //std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
     /*
     m_validator.validate(data,
                          [] (const Data&) {
@@ -465,9 +465,9 @@ private:
     //TODO4: for now, this works with a single version of each service. We can not have the same service appear twice in the same DAG until we make the changes above.
 
 
-    std::cout << " data received - looking for index number. m_dagObject is currently: " << std::setw(2) << m_dagObject << std::endl;
-    std::cout << " data received - rxedDataName: " << rxedDataName << std::endl;
-    std::cout << " data received - m_nameUri: " << m_nameUri << std::endl;
+    //std::cout << " data received - looking for index number. m_dagObject is currently: " << std::setw(2) << m_dagObject << std::endl;
+    //std::cout << " data received - rxedDataName: " << rxedDataName << std::endl;
+    //std::cout << " data received - m_nameUri: " << m_nameUri << std::endl;
     char index = -1;
     for (auto& x : m_dagObject["dag"].items())
     {
