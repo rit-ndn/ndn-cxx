@@ -58,7 +58,7 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    std::cout << ">> I: " << interest << std::endl;
+    //std::cout << ">> I: " << interest << std::endl;
 
     // Create Data packet
     auto data = std::make_shared<Data>();
@@ -92,7 +92,7 @@ private:
      m_keyChain.sign(*data, signingWithSha256());
 
     // Return Data packet to the requester
-    std::cout << "<< D: " << *data << std::endl;
+    //std::cout << "<< D: " << *data << std::endl;
     m_face.put(*data);
   }
 
