@@ -9,6 +9,24 @@
 #nfd-start
 #---------------------------------------------------------
 
+#run_4DAG_OrchA=run
+run_4DAG_OrchB=true
+#run_4DAG_interCACHE=true
+#run_8DAG_OrchA=true
+#run_8DAG_OrchB=true
+#run_8DAG_interCACHE=true
+#run_8DAG_Caching_OrchA=true
+#run_8DAG_Caching_OrchB=true
+#run_8DAG_Caching_interCACHE=true
+#run_20Parallel_OrchA=true
+#run_20Parallel_OrchB=true
+#run_20Parallel_interCACHE=true
+#run_20Sensor_OrchA=true
+#run_20Sensor_OrchB=true
+#run_20Sensor_interCACHE=true
+#run_20Linear_OrchA=true
+#run_20Linear_OrchB=true
+#run_20Linear_interCACHE=true
 
 
 username=cabeee
@@ -105,81 +123,202 @@ sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/sensor
 sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service2 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service3 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service4 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service6 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service7 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /interCACHE/service8 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE/sensor ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE/service2 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE/service1 ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE/service6 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "nfdc route add /interCACHE/service5 ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
 
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/sensor ether://[${producerETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service1 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service3 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service4 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service5 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service7 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /interCACHE/service8 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 
 sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE ether://[${producerETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service1 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service2 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service3 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service4 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
-
-
-# 4 DAG - Orchestrator A
-# start producer application
-#sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
-# start orchestratorA application
-#sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
-# start forwarder application(s)
-#sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service1 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service2 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service3 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service4 >/dev/null 2>&1 &"
-# start consumer application (not in the background, so that we see the final print statements)
-#sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 1"
-
-
-# 4 DAG - Orchestrator B
-# start producer application
-#sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
-# start orchestratorA application
-#sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
-# start forwarder application(s)
-#sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service1 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service2 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service3 >/dev/null 2>&1 &"
-#sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service4 >/dev/null 2>&1 &"
-# start consumer application (not in the background, so that we see the final print statements)
-#sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 2"
-
-
-# 4 DAG - interCACHE Forwarder
-# start producer application
-sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
-# start forwarder application(s)
-sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
-sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
-# start consumer application (not in the background, so that we see the final print statements)
-sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0"
+sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service5 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service6 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service7 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
+sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /interCACHE/service8 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 
 
 
 
+if [ $run_4DAG_OrchA ]; then
+	# start producer application
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	# start orchestratorA application
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	# start forwarder application(s)
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service4 >/dev/null 2>&1 &"
+	# start consumer application (not in the background, so that we see the final print statements)
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 1"
+fi
 
-# 20 Linear
+if [ $run_4DAG_OrchB ]; then
+	# start producer application
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	# start orchestratorA application
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	# start forwarder application(s)
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service4 >/dev/null 2>&1 &"
+	# start consumer application (not in the background, so that we see the final print statements)
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 2"
+fi
+
+if [ $run_4DAG_interCACHE ]; then
+	# start producer application
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	# start forwarder application(s)
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
+	# start consumer application (not in the background, so that we see the final print statements)
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0"
+fi
+
+if [ $run_8DAG_OrchA ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 1"
+fi
+
+if [ $run_8DAG_OrchB ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 2"
+
+fi
+
+if [ $run_8DAG_interCACHE ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 0"
+fi
+
+if [ $run_8DAG_Caching_OrchA ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 1"
+	sleep 2
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 1"
+fi
+
+if [ $run_8DAG_Caching_OrchB ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /interCACHE /serviceOrchestration >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 2"
+	sleep 2
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 2"
+fi
+
+if [ $run_8DAG_Caching_interCACHE ]; then
+	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /interCACHE /sensor >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service1 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service2 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service3 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service4 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/4dag.json 0"
+	sleep 2
+	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service5 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service6 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service7 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /interCACHE /service8 >/dev/null 2>&1 &"
+	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /interCACHE ~/mini-ndn/workflows/8dag.json 0"
+fi
+
+#if [ $run_20Parallel_OrchA ]; then
+#fi
+
+#if [ $run_20Parallel_OrchB ]; then
+#fi
+
+#if [ $run_20Parallel_interCACHE ]; then
+#fi
+
+#if [ $run_20Sensor_OrchA ]; then
+#fi
+
+#if [ $run_20Sensor_OrchB ]; then
+#fi
+
+#if [ $run_20Sensor_interCACHE ]; then
+#fi
+
+#if [ $run_20Linear_OrchA ]; then
+#fi
+
+#if [ $run_20Linear_OrchB ]; then
+#fi
+
+#if [ $run_20Linear_interCACHE ]; then
+#fi
 
 
-# 20 Parallel
 
 
-# 20 Sensor (Parallel)
 
 
-# 8 DAG
 
 
-# 8 DAG w/ caching
 
 
 
