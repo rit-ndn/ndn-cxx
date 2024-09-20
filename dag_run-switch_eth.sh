@@ -11,26 +11,27 @@
 
 #run_4DAG_OrchA=true
 #run_4DAG_OrchB=true
-#run_4DAG_interCACHE=true
+#run_4DAG_nesco=true
 #run_8DAG_OrchA=true
 #run_8DAG_OrchB=true
-#run_8DAG_interCACHE=true
+#run_8DAG_nesco=true
 #run_8DAG_Caching_OrchA=true
 #run_8DAG_Caching_OrchB=true
-#run_8DAG_Caching_interCACHE=true
+#run_8DAG_Caching_nesco=true
 #run_20Parallel_OrchA=true
 #run_20Parallel_OrchB=true
-#run_20Parallel_interCACHE=true
+#run_20Parallel_nesco=true
 #run_20Sensor_OrchA=true
 #run_20Sensor_OrchB=true
-run_20Sensor_interCACHE=true
+run_20Sensor_nesco=true
 #run_20Linear_OrchA=true
 #run_20Linear_OrchB=true
-#run_20Linear_interCACHE=true
+#run_20Linear_nesco=true
 
 #PREFIX=orchA
 #PREFIX=orchB
-PREFIX=interCACHE
+#PREFIX=nesco
+PREFIX=nescoSCOPT
 
 username=cabeee
 
@@ -119,7 +120,7 @@ sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc face create remote ether
 
 
 # add routes for all the PREFIXes to all nodes
-if [ $run_4DAG_OrchA ] || [ $run_4DAG_OrchB ] || [ $run_4DAG_interCACHE ] || [ $run_8DAG_OrchA ] || [ $run_8DAG_OrchB ] || [ $run_8DAG_interCACHE ] || [ $run_8DAG_Caching_OrchA ] || [ $run_8DAG_Caching_OrchB ] || [ $run_8DAG_Caching_interCACHE ]; then
+if [ $run_4DAG_OrchA ] || [ $run_4DAG_OrchB ] || [ $run_4DAG_nesco ] || [ $run_8DAG_OrchA ] || [ $run_8DAG_OrchB ] || [ $run_8DAG_nesco ] || [ $run_8DAG_Caching_OrchA ] || [ $run_8DAG_Caching_OrchB ] || [ $run_8DAG_Caching_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
 	
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
@@ -158,7 +159,7 @@ if [ $run_4DAG_OrchA ] || [ $run_4DAG_OrchB ] || [ $run_4DAG_interCACHE ] || [ $
 	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "nfdc route add /${PREFIX}/service8 ether://[${rtr1ETHMAC}] >/dev/null 2>&1 &"
 fi
 
-if [ $run_20Parallel_OrchA ] || [ $run_20Parallel_OrchB ] || [ $run_20Parallel_interCACHE ]; then
+if [ $run_20Parallel_OrchA ] || [ $run_20Parallel_OrchB ] || [ $run_20Parallel_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
 	
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
@@ -210,7 +211,7 @@ if [ $run_20Parallel_OrchA ] || [ $run_20Parallel_OrchB ] || [ $run_20Parallel_i
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /${PREFIX}/serviceP21 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 fi
 
-if [ $run_20Sensor_OrchA ] || [ $run_20Sensor_OrchB ] || [ $run_20Sensor_interCACHE ]; then
+if [ $run_20Sensor_OrchA ] || [ $run_20Sensor_OrchB ] || [ $run_20Sensor_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
 	
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
@@ -300,7 +301,7 @@ if [ $run_20Sensor_OrchA ] || [ $run_20Sensor_OrchB ] || [ $run_20Sensor_interCA
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "nfdc route add /${PREFIX}/serviceP21 ether://[${rtr2ETHMAC}] >/dev/null 2>&1 &"
 fi
 
-if [ $run_20Linear_OrchA ] || [ $run_20Linear_OrchB ] || [ $run_20Linear_interCACHE ]; then
+if [ $run_20Linear_OrchA ] || [ $run_20Linear_OrchB ] || [ $run_20Linear_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
 	
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}] >/dev/null 2>&1 &"
@@ -413,7 +414,7 @@ if [ $run_4DAG_OrchB ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 2"
 fi
 
-if [ $run_4DAG_interCACHE ]; then
+if [ $run_4DAG_nesco ]; then
 	# start producer application
 	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor >/dev/null 2>&1 &"
 	# start forwarder application(s)
@@ -457,7 +458,7 @@ if [ $run_8DAG_OrchB ]; then
 
 fi
 
-if [ $run_8DAG_interCACHE ]; then
+if [ $run_8DAG_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service1 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service2 >/dev/null 2>&1 &"
@@ -509,7 +510,7 @@ if [ $run_8DAG_Caching_OrchB ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 2"
 fi
 
-if [ $run_8DAG_Caching_interCACHE ]; then
+if [ $run_8DAG_Caching_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service1 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service2 >/dev/null 2>&1 &"
@@ -582,7 +583,7 @@ if [ $run_20Parallel_OrchB ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-parallel.json 2"
 fi
 
-if [ $run_20Parallel_interCACHE ]; then
+if [ $run_20Parallel_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP1 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP2 >/dev/null 2>&1 &"
@@ -703,7 +704,7 @@ if [ $run_20Sensor_OrchB ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-sensor.json 2"
 fi
 
-if [ $run_20Sensor_interCACHE ]; then
+if [ $run_20Sensor_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 >/dev/null 2>&1 &"
@@ -803,7 +804,7 @@ if [ $run_20Linear_OrchB ]; then
 	sleep ${sleep}; ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-linear.json 2"
 fi
 
-if [ $run_20Linear_interCACHE ]; then
+if [ $run_20Linear_nesco ]; then
 	sleep ${sleep}; ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL1 >/dev/null 2>&1 &"
 	sleep ${sleep}; ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL2 >/dev/null 2>&1 &"
