@@ -54,14 +54,16 @@ public:
     //m_name = servicePrefix;
     m_service = servicePrefix;
     std::cout << "Forwarder listening to: " << fullPrefix << '\n';
+    std::string shortcutOPTPrefix("/nescoSCOPT/shortcutOPT");
+    shortcutOPTPrefix.append(servicePrefix);
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&Forwarder::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
-    m_face.setInterestFilter("/nescoSCOPT/shortcutOPT",
-                             std::bind(&Forwarder::onInterest, this, _2),
-                             nullptr, // RegisterPrefixSuccessCallback is optional
-                             std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
+    //m_face.setInterestFilter(shortcutOPTPrefix,
+                             //std::bind(&Forwarder::onInterest, this, _2),
+                             //nullptr, // RegisterPrefixSuccessCallback is optional
+                             //std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
 
     auto cert = m_keyChain.getPib().getDefaultIdentity().getDefaultKey().getDefaultCertificate();
     m_certServeHandle = m_face.setInterestFilter(security::extractIdentityFromCertName(cert.getName()),
@@ -273,7 +275,7 @@ private:
     json nullJson;
     ndn::Name simpleName;
     simpleName = (interest.getName()).getPrefix(-1); // remove the last component of the name (the parameter digest) so we have just the raw name, and convert to Uri string
-    simpleName = simpleName.getSubName(1); // remove the first component of the name (/nesco)
+    simpleName = simpleName.getSubName(1,1); // remove the zeroeth component of the name (/nesco), starting at component 1, keep only 1 component
     std::string rxedInterestName = simpleName.toUri();
     //std::cout << "Forwarder rxedInterestName: " << rxedInterestName << std::endl;
 
