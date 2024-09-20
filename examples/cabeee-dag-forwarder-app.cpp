@@ -58,7 +58,7 @@ public:
                              std::bind(&Forwarder::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
-    m_face.setInterestFilter("/interCACHE/shortcutOPT", //TODO: don't hardcode the interCACHE prefix
+    m_face.setInterestFilter("/nescoSCOPT/shortcutOPT",
                              std::bind(&Forwarder::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
@@ -273,7 +273,7 @@ private:
     json nullJson;
     ndn::Name simpleName;
     simpleName = (interest.getName()).getPrefix(-1); // remove the last component of the name (the parameter digest) so we have just the raw name, and convert to Uri string
-    simpleName = simpleName.getSubName(1); // remove the first component of the name (/interCACHE)
+    simpleName = simpleName.getSubName(1); // remove the first component of the name (/nesco)
     std::string rxedInterestName = simpleName.toUri();
     //std::cout << "Forwarder rxedInterestName: " << rxedInterestName << std::endl;
 
@@ -438,7 +438,7 @@ private:
 
     ndn::Name simpleName;
     simpleName = (data.getName()).getPrefix(-1); // remove the last component of the name (the parameter digest) so we have just the raw name, and convert to Uri string
-    simpleName = simpleName.getSubName(1); // remove the first component of the name (/interCACHE)
+    simpleName = simpleName.getSubName(1); // remove the first component of the name (/nesco)
     //std::string rxedDataName = (data.getName()).getPrefix(-1).toUri(); // remove the last component of the name (the parameter digest) so we have just the raw name
     std::string rxedDataName = simpleName.toUri();
 
