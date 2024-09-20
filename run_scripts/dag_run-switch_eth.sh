@@ -30,8 +30,8 @@ run_20Sensor_nesco=true
 
 #PREFIX=orchA
 #PREFIX=orchB
-#PREFIX=nesco
-PREFIX=nescoSCOPT
+PREFIX=nesco
+#PREFIX=nescoSCOPT
 
 username=cabeee
 
