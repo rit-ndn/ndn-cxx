@@ -9,37 +9,6 @@
 #nfd-start
 #---------------------------------------------------------
 
-scenario=run_4DAG_OrchA
-#scenario=run_4DAG_OrchB
-#scenario=run_4DAG_nesco
-#scenario=run_8DAG_OrchA
-#scenario=run_8DAG_OrchB
-#scenario=run_8DAG_nesco
-#scenario=run_8DAG_Caching_OrchA
-#scenario=run_8DAG_Caching_OrchB
-#scenario=run_8DAG_Caching_nesco
-#scenario=run_20Parallel_OrchA
-#scenario=run_20Parallel_OrchB
-#scenario=run_20Parallel_nesco
-#scenario=run_20Sensor_OrchA
-#scenario=run_20Sensor_OrchB
-#scenario=run_20Sensor_nesco
-#scenario=run_20Linear_OrchA
-#scenario=run_20Linear_OrchB
-#scenario=run_20Linear_nesco
-
-PREFIX=orchA
-#PREFIX=orchB
-#PREFIX=nesco
-#PREFIX=nescoSCOPT
-
-sleep=0.1
-
-
-
-
-
-
 username=cabeee
 
 lenovoWiFiIP=192.168.20.143
@@ -91,6 +60,34 @@ jetsonETHinterface=eth0
 jetsonUSBETHinterface=eth1
 
 
+
+scenario=run_4DAG_OrchA
+#scenario=run_4DAG_OrchB
+#scenario=run_4DAG_nesco
+#scenario=run_8DAG_OrchA
+#scenario=run_8DAG_OrchB
+#scenario=run_8DAG_nesco
+#scenario=run_8DAG_Caching_OrchA
+#scenario=run_8DAG_Caching_OrchB
+#scenario=run_8DAG_Caching_nesco
+#scenario=run_20Parallel_OrchA
+#scenario=run_20Parallel_OrchB
+#scenario=run_20Parallel_nesco
+#scenario=run_20Sensor_OrchA
+#scenario=run_20Sensor_OrchB
+#scenario=run_20Sensor_nesco
+#scenario=run_20Linear_OrchA
+#scenario=run_20Linear_OrchB
+#scenario=run_20Linear_nesco
+
+PREFIX=orchA
+#PREFIX=orchB
+#PREFIX=nesco
+#PREFIX=nescoSCOPT
+
+sleep=0.2
+
+
 clear
 
 
@@ -100,10 +97,10 @@ clear
 #ssh <username>@<ip_address> "<command> >/dev/null 2>&1 &"
 
 ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr1WiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1 ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr2WiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2 ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr3WiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3 ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 sleep 1
-ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
 
 
