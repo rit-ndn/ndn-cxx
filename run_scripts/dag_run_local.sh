@@ -102,15 +102,17 @@ fi
 
 
 
-echo -e "Setting up routes\n"
 
 # add routes for all the PREFIXes to all nodes
-if [ ${scenario}==run_4DAG_OrchA ] || [ ${scenario}==run_4DAG_OrchB ] || [ ${scenario}==run_4DAG_nesco ] || [ ${scenario}==run_8DAG_OrchA ] || [ ${scenario}==run_8DAG_OrchB ] || [ ${scenario}==run_8DAG_nesco ] || [ ${scenario}==run_8DAG_Caching_OrchA ] || [ ${scenario}==run_8DAG_Caching_OrchB ] || [ ${scenario}==run_8DAG_Caching_nesco ]; then
+if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ ${scenario} == run_4DAG_nesco ] || [ ${scenario} == run_8DAG_OrchA ] || [ ${scenario} == run_8DAG_OrchB ] || [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_Caching_OrchA ] || [ ${scenario} == run_8DAG_Caching_OrchB ] || [ ${scenario} == run_8DAG_Caching_nesco ]; then
+	echo -e "4DAG or 8DAG scenario"
 	if [ ${device} == consumer ]; then
+		echo -e "Setting up routes for the consumer\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 	fi
 	
 	if [ ${device} == rtr3 ]; then
+		echo -e "Setting up routes for rtr3\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr2ETHMAC}]
@@ -122,6 +124,7 @@ if [ ${scenario}==run_4DAG_OrchA ] || [ ${scenario}==run_4DAG_OrchB ] || [ ${sce
 	fi
 
 	if [ ${device} == rtr2 ]; then
+		echo -e "Setting up routes for rtr2\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr1ETHMAC}]
@@ -131,6 +134,7 @@ if [ ${scenario}==run_4DAG_OrchA ] || [ ${scenario}==run_4DAG_OrchB ] || [ ${sce
 	fi
 
 	if [ ${device} == rtr1 ]; then
+		echo -e "Setting up routes for rtr1\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${producerETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service1 ether://[${rtr2ETHMAC}]
@@ -142,6 +146,7 @@ if [ ${scenario}==run_4DAG_OrchA ] || [ ${scenario}==run_4DAG_OrchB ] || [ ${sce
 	fi
 
 	if [ ${device} == producer ]; then
+		echo -e "Setting up routes for rtr3\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${producerETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service1 ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr1ETHMAC}]
@@ -154,11 +159,14 @@ if [ ${scenario}==run_4DAG_OrchA ] || [ ${scenario}==run_4DAG_OrchB ] || [ ${sce
 	fi
 fi
 
-if [ ${scenario}==run_20Parallel_OrchA ] || [ ${scenario}==run_20Parallel_OrchB ] || [ ${scenario}==run_20Parallel_nesco ]; then
+if [ ${scenario} == run_20Parallel_OrchA ] || [ ${scenario} == run_20Parallel_OrchB ] || [ ${scenario} == run_20Parallel_nesco ]; then
+	echo -e "20Parallel scenario"
 	if [ ${device} == consumer ]; then
+		echo -e "Setting up routes for the consumer\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 	fi
 	if [ ${device} == rtr3 ]; then
+		echo -e "Setting up routes for rtr3\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2ETHMAC}]
@@ -183,10 +191,12 @@ if [ ${scenario}==run_20Parallel_OrchA ] || [ ${scenario}==run_20Parallel_OrchB 
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP20 ether://[${rtr2ETHMAC}]
 	fi
 	if [ ${device} == rtr2 ]; then
+		echo -e "Setting up routes for rtr2\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP21 ether://[${rtr3ETHMAC}]
 	fi
 	if [ ${device} == rtr1 ]; then
+		echo -e "Setting up routes for rtr1\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP2 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP3 ether://[${rtr2ETHMAC}]
@@ -214,7 +224,7 @@ if [ ${scenario}==run_20Parallel_OrchA ] || [ ${scenario}==run_20Parallel_OrchB 
 
 fi
 
-if [ ${scenario}==run_20Sensor_OrchA ] || [ ${scenario}==run_20Sensor_OrchB ] || [ ${scenario}==run_20Sensor_nesco ]; then
+if [ ${scenario} == run_20Sensor_OrchA ] || [ ${scenario} == run_20Sensor_OrchB ] || [ ${scenario} == run_20Sensor_nesco ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 	fi
@@ -312,7 +322,7 @@ if [ ${scenario}==run_20Sensor_OrchA ] || [ ${scenario}==run_20Sensor_OrchB ] ||
 
 fi
 
-if [ ${scenario}==run_20Linear_OrchA ] || [ ${scenario}==run_20Linear_OrchB ] || [ ${scenario}==run_20Linear_nesco ]; then
+if [ ${scenario} == run_20Linear_OrchA ] || [ ${scenario} == run_20Linear_OrchB ] || [ ${scenario} == run_20Linear_nesco ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 	fi
@@ -402,7 +412,7 @@ sleep 1
 
 
 
-if [ ${scenario}==run_4DAG_OrchA ]; then
+if [ ${scenario} == run_4DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -426,7 +436,7 @@ if [ ${scenario}==run_4DAG_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_4DAG_OrchB ]; then
+if [ ${scenario} == run_4DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
@@ -450,7 +460,7 @@ if [ ${scenario}==run_4DAG_OrchB ]; then
 	fi
 fi
 
-if [ ${scenario}==run_4DAG_nesco ]; then
+if [ ${scenario} == run_4DAG_nesco ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
@@ -472,7 +482,7 @@ if [ ${scenario}==run_4DAG_nesco ]; then
 	fi
 fi
 
-if [ ${scenario}==run_8DAG_OrchA ]; then
+if [ ${scenario} == run_8DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -497,7 +507,7 @@ if [ ${scenario}==run_8DAG_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_8DAG_OrchB ]; then
+if [ ${scenario} == run_8DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -523,7 +533,7 @@ if [ ${scenario}==run_8DAG_OrchB ]; then
 
 fi
 
-if [ ${scenario}==run_8DAG_nesco ]; then
+if [ ${scenario} == run_8DAG_nesco ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -547,7 +557,7 @@ if [ ${scenario}==run_8DAG_nesco ]; then
 	fi
 fi
 
-if [ ${scenario}==run_8DAG_Caching_OrchA ]; then
+if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -575,7 +585,7 @@ if [ ${scenario}==run_8DAG_Caching_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_8DAG_Caching_OrchB ]; then
+if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -604,7 +614,7 @@ if [ ${scenario}==run_8DAG_Caching_OrchB ]; then
 	fi
 fi
 
-if [ ${scenario}==run_8DAG_Caching_nesco ]; then
+if [ ${scenario} == run_8DAG_Caching_nesco ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -631,7 +641,7 @@ if [ ${scenario}==run_8DAG_Caching_nesco ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Parallel_OrchA ]; then
+if [ ${scenario} == run_20Parallel_OrchA ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -667,7 +677,7 @@ if [ ${scenario}==run_20Parallel_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Parallel_OrchB ]; then
+if [ ${scenario} == run_20Parallel_OrchB ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -703,7 +713,7 @@ if [ ${scenario}==run_20Parallel_OrchB ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Parallel_nesco ]; then
+if [ ${scenario} == run_20Parallel_nesco ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -738,7 +748,7 @@ if [ ${scenario}==run_20Parallel_nesco ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Sensor_OrchA ]; then
+if [ ${scenario} == run_20Sensor_OrchA ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
@@ -793,7 +803,7 @@ if [ ${scenario}==run_20Sensor_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Sensor_OrchB ]; then
+if [ ${scenario} == run_20Sensor_OrchB ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
@@ -848,7 +858,7 @@ if [ ${scenario}==run_20Sensor_OrchB ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Sensor_nesco ]; then
+if [ ${scenario} == run_20Sensor_nesco ]; then
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
@@ -902,7 +912,7 @@ if [ ${scenario}==run_20Sensor_nesco ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Linear_OrchA ]; then
+if [ ${scenario} == run_20Linear_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -939,7 +949,7 @@ if [ ${scenario}==run_20Linear_OrchA ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Linear_OrchB ]; then
+if [ ${scenario} == run_20Linear_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -976,7 +986,7 @@ if [ ${scenario}==run_20Linear_OrchB ]; then
 	fi
 fi
 
-if [ ${scenario}==run_20Linear_nesco ]; then
+if [ ${scenario} == run_20Linear_nesco ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
