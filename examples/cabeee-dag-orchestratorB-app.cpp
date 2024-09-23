@@ -413,7 +413,7 @@ private:
         }
       }
     }
-    std::cout << "Updated dagOrchTracker data structure: " << std::setw(2) << m_dagOrchTracker << '\n';
+    //std::cout << "Updated dagOrchTracker data structure: " << std::setw(2) << m_dagOrchTracker << '\n';
     m_serviceInputIndex++; // get it ready for the next data input that we receive
 
 
@@ -492,7 +492,7 @@ private:
       {
         if (sinkNode == serviceFeed.key())
         {
-          std::cout << "Final data packet! Creating data for name: " << m_nameAndDigest << std::endl;   // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
+          //std::cout << "Final data packet! Creating data for name: " << m_nameAndDigest << std::endl;   // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
                                                                                                         // We use m_nameAndDigest to store the old name with the digest.
 
           // Create new Data packet
@@ -522,7 +522,7 @@ private:
           m_keyChain.sign(*new_data, signingWithSha256());
 
           // Return Data packet to the requester
-          std::cout << "<< D: " << *new_data << std::endl;
+          //std::cout << "<< D: " << *new_data << std::endl;
           m_face.put(*new_data);
 
 
