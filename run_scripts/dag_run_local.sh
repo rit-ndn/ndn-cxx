@@ -109,6 +109,7 @@ if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ $
 	if [ ${device} == consumer ]; then
 		echo -e "Setting up routes for the consumer\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerETHMAC}]
 	fi
 	
 	if [ ${device} == rtr3 ]; then
@@ -121,6 +122,7 @@ if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ $
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service6 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service7 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service8 ether://[${rtr2ETHMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerETHMAC}]
 	fi
 
 	if [ ${device} == rtr2 ]; then
@@ -131,6 +133,7 @@ if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ $
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service1 ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service6 ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service5 ether://[${rtr3ETHMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr3ETHMAC}]
 	fi
 
 	if [ ${device} == rtr1 ]; then
@@ -143,6 +146,7 @@ if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ $
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service5 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service7 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service8 ether://[${rtr2ETHMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr2ETHMAC}]
 	fi
 
 	if [ ${device} == producer ]; then
@@ -156,6 +160,7 @@ if [ ${scenario} == run_4DAG_OrchA ] || [ ${scenario} == run_4DAG_OrchB ] || [ $
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service6 ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service7 ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service8 ether://[${rtr1ETHMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr1ETHMAC}]
 	fi
 fi
 
