@@ -61,8 +61,8 @@ jetsonUSBETHinterface=eth1
 
 
 
-scenario=run_4DAG_OrchA
-#scenario=run_4DAG_OrchB
+#scenario=run_4DAG_OrchA
+scenario=run_4DAG_OrchB
 #scenario=run_4DAG_nesco
 #scenario=run_8DAG_OrchA
 #scenario=run_8DAG_OrchB
@@ -80,8 +80,8 @@ scenario=run_4DAG_OrchA
 #scenario=run_20Linear_OrchB
 #scenario=run_20Linear_nesco
 
-PREFIX=orchA
-#PREFIX=orchB
+#PREFIX=orchA
+PREFIX=orchB
 #PREFIX=nesco
 #PREFIX=nescoSCOPT
 
@@ -100,7 +100,7 @@ ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh pr
 ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-sleep 1
+sleep 20
 ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
 
 

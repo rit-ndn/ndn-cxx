@@ -9,7 +9,7 @@
 #nfd-start
 #---------------------------------------------------------
 
-#run_4DAG_OrchA=true
+run_4DAG_OrchA=true
 #run_4DAG_OrchB=true
 #run_4DAG_nesco=true
 #run_8DAG_OrchA=true
@@ -23,14 +23,14 @@
 #run_20Parallel_nesco=true
 #run_20Sensor_OrchA=true
 #run_20Sensor_OrchB=true
-run_20Sensor_nesco=true
+#run_20Sensor_nesco=true
 #run_20Linear_OrchA=true
 #run_20Linear_OrchB=true
 #run_20Linear_nesco=true
 
-#PREFIX=orchA
+PREFIX=orchA
 #PREFIX=orchB
-PREFIX=nesco
+#PREFIX=nesco
 #PREFIX=nescoSCOPT
 
 username=cabeee
