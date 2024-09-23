@@ -62,7 +62,7 @@ jetsonUSBETHinterface=eth1
 
 
 #scenario=run_4DAG_OrchA
-scenario=run_4DAG_OrchB
+#scenario=run_4DAG_OrchB
 #scenario=run_4DAG_nesco
 #scenario=run_8DAG_OrchA
 #scenario=run_8DAG_OrchB
@@ -81,7 +81,7 @@ scenario=run_4DAG_OrchB
 #scenario=run_20Linear_nesco
 
 #PREFIX=orchA
-PREFIX=orchB
+#PREFIX=orchB
 #PREFIX=nesco
 #PREFIX=nescoSCOPT
 
@@ -96,11 +96,125 @@ clear
 # or
 #ssh <username>@<ip_address> "<command> >/dev/null 2>&1 &"
 
-ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-sleep 20
-ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
+#ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#sleep 20
+#ssh ${username}@${consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
 
 
+
+
+
+
+
+
+
+set -e
+
+
+numSamples=2
+
+NDN_DIR="$HOME/ndn"
+RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
+
+scenarios=(
+# 4 DAG
+run_4DAG_OrchA
+#run_4DAG_OrchB
+#run_4DAG_nesco
+#run_4DAG_nescoSCOPT
+# 8 DAG
+#run_8DAG_OrchA
+#run_8DAG_OrchB
+#run_8DAG_nesco
+#run_8DAG_nescoSCOPT
+# 8 DAG w/ caching
+#run_8DAG_Caching_OrchA
+#run_8DAG_Caching_OrchB
+#run_8DAG_Caching_nesco
+#run_8DAG_Caching_nescoSCOPT
+# 20 Parallel
+#run_20Parallel_OrchA
+#run_20Parallel_OrchB
+#run_20Parallel_nesco
+#run_20Parallel_nescoSCOPT
+# 20 Sensor (Parallel)
+#run_20Sensor_OrchA
+#run_20Sensor_OrchB
+#run_20Sensor_nesco
+#run_20Sensor_nescoSCOPT
+# 20 Linear (new hosting using 3node topology)
+#run_20Linear_OrchA
+#run_20Linear_OrchB
+#run_20Linear_nesco
+#run_20Linear_nescoSCOPT
+)
+
+example_log="$RUN_DIR/ndn-cxx/run_scripts/example.log"
+consumer_log="/tmp/minindn/user/cabeee_consumer.log"
+csv_out="$RUN_DIR/perf-results-hardware.csv"
+header="Example, Service Latency, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
+
+if [ ! -f "$csv_out" ]; then
+	echo "$header" > "$csv_out"
+elif ! grep -q -F "$header" "$csv_out"; then
+	mv "$csv_out" "$csv_out.bak"
+	echo -e "Overwriting csv...\n"
+	echo "$header" > "$csv_out"
+else
+	cp "$csv_out" "$csv_out.bak"
+fi
+
+for scenario in "${scenarios[@]}"
+do
+	echo -e "Example: $scenario\n"
+
+	for sample in $(seq 1 $numSamples);
+	do
+		now="$(date -Iseconds)"
+
+		ndncxx_hash="$(git -C "$NDN_DIR/ndn-cxx" rev-parse HEAD)"
+		nfd_hash="$(git -C "$NDN_DIR/NFD" rev-parse HEAD)"
+		nlsr_hash="$(git -C "$NDN_DIR/NLSR" rev-parse HEAD)"
+
+		# these sed scripts depend on the order in which the logs are printed
+
+		echo -e "   Running sample #${sample}...\n"
+
+		ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} >/dev/null 2>&1 &"
+		sleep 5
+		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep}"
+
+		consumer_parse=$( \
+			${cmd} |& tee /dev/tty | sed -n \
+			-e 's/^\s*The final answer is: \([0-9]*\)$/\1,/p' \
+			-e 's/^\s*Service Latency: \([0-9\.]*\) seconds.$/\1,/p' \
+			| tr -d '\n' \
+		)
+
+		result="$(echo "$consumer_parse" | cut -d',' -f1)"
+		latency="$(echo "$consumer_parse" | cut -d',' -f2)"
+
+		row="$scenario, $latency, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
+
+		echo -e "   Dumping to csv...\n"
+		# replace existing line
+		#line_num="$(grep -n -F "$script," "$csv_out" | cut -d: -f1 | head -1)"
+		#if [ -n "$line_num" ]; then
+			#sed --in-place -e "${line_num}c\\$row" "$csv_out"
+		#else
+			#echo "$row" >> "$csv_out"
+		#fi
+		# don't replace, just add this run to the bottom of the file
+		echo "$row" >> "$csv_out"
+
+		echo ""
+	done
+done
+
+echo -e "All examples ran\n"
