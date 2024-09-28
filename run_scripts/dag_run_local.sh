@@ -76,26 +76,26 @@ sleep 1
 
 # create the faces
 if [ ${device} == producer ]; then
-	echo -e "Creating faces for the producer\n"
+	echo -en "Creating faces for the producer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${producerETHinterface} persistency permanent
 fi
 if [ ${device} == rtr1 ]; then
-	echo -e "Creating faces for rtr1\n"
+	echo -en "Creating faces for rtr1\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${producerETHMAC}] local dev://${rtr1ETHinterface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2ETHMAC}] local dev://${rtr1ETHinterface} persistency permanent
 fi
 if [ ${device} == rtr2 ]; then
-	echo -e "Creating faces for rtr2\n"
+	echo -en "Creating faces for rtr2\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3ETHMAC}] local dev://${rtr2ETHinterface} persistency permanent
 fi
 if [ ${device} == rtr3 ]; then
-	echo -e "Creating faces for rtr3\n"
+	echo -en "Creating faces for rtr3\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2ETHMAC}] local dev://${rtr3ETHinterface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${consumerETHMAC}] local dev://${rtr3ETHinterface} persistency permanent
 fi
 if [ ${device} == consumer ]; then
-	echo -e "Creating faces for the consumer\n"
+	echo -en "Creating faces for the consumer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3ETHMAC}] local dev://${consumerETHinterface} persistency permanent
 fi
 
@@ -147,15 +147,15 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	[ ${scenario} == run_8DAG_Caching_OrchB ] || \
 	[ ${scenario} == run_8DAG_Caching_nesco ] || \
 	[ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
-	echo -e "4DAG or 8DAG scenario"
+	echo -en "4DAG or 8DAG scenario\r\n"
 	if [ ${device} == consumer ]; then
-		echo -e "Setting up routes for the consumer\n"
+		echo -en "Setting up routes for the consumer\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerETHMAC}]
 	fi
 	
 	if [ ${device} == rtr3 ]; then
-		echo -e "Setting up routes for rtr3\n"
+		echo -en "Setting up routes for rtr3\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr2ETHMAC}]
@@ -168,7 +168,7 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	fi
 
 	if [ ${device} == rtr2 ]; then
-		echo -e "Setting up routes for rtr2\n"
+		echo -en "Setting up routes for rtr2\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr1ETHMAC}]
@@ -179,7 +179,7 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	fi
 
 	if [ ${device} == rtr1 ]; then
-		echo -e "Setting up routes for rtr1\n"
+		echo -en "Setting up routes for rtr1\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${producerETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service1 ether://[${rtr2ETHMAC}]
@@ -192,7 +192,7 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	fi
 
 	if [ ${device} == producer ]; then
-		echo -e "Setting up routes for rtr3\n"
+		echo -en "Setting up routes for rtr3\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${producerETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service1 ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/service2 ether://[${rtr1ETHMAC}]
@@ -210,14 +210,14 @@ if 	[ ${scenario} == run_20Parallel_OrchA ] || \
 	[ ${scenario} == run_20Parallel_OrchB ] || \
 	[ ${scenario} == run_20Parallel_nesco ] || \
 	[ ${scenario} == run_20Parallel_nescoSCOPT ]; then
-	echo -e "20Parallel scenario"
+	echo -en "20Parallel scenario\r\n"
 	if [ ${device} == consumer ]; then
-		echo -e "Setting up routes for the consumer\n"
+		echo -en "Setting up routes for the consumer\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerETHMAC}]
 	fi
 	if [ ${device} == rtr3 ]; then
-		echo -e "Setting up routes for rtr3\n"
+		echo -en "Setting up routes for rtr3\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2ETHMAC}]
@@ -243,13 +243,13 @@ if 	[ ${scenario} == run_20Parallel_OrchA ] || \
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerETHMAC}]
 	fi
 	if [ ${device} == rtr2 ]; then
-		echo -e "Setting up routes for rtr2\n"
+		echo -en "Setting up routes for rtr2\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP21 ether://[${rtr3ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr3ETHMAC}]
 	fi
 	if [ ${device} == rtr1 ]; then
-		echo -e "Setting up routes for rtr1\n"
+		echo -en "Setting up routes for rtr1\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP2 ether://[${rtr2ETHMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP3 ether://[${rtr2ETHMAC}]
@@ -572,7 +572,7 @@ if [ ${scenario} == run_8DAG_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
 	fi
 fi
 
@@ -597,7 +597,7 @@ if [ ${scenario} == run_8DAG_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
 	fi
 
 fi
@@ -622,7 +622,7 @@ if [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_nescoSCOPT ]; 
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
 	fi
 fi
 
@@ -647,10 +647,10 @@ if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
 	fi
 fi
 
@@ -675,11 +675,11 @@ if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 2
 		sleep 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
 	fi
 fi
 
@@ -703,10 +703,10 @@ if [ ${scenario} == run_8DAG_Caching_nesco ] || [ ${scenario} == run_8DAG_Cachin
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 0
 		sleep 1
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
 	fi
 fi
 
@@ -1103,7 +1103,9 @@ fi
 
 
 # stop NFD to clear cache and forwarding table entries
-#ndf-stop
+if [ ${device} == consumer ]; then
+	nfd-stop
+fi
 
 
 

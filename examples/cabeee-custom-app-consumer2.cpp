@@ -185,7 +185,7 @@ private:
     pContent++;  // now this points to the first size octet
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
-    std::cout << "\n  The final answer is: " <<  (int)(*pContent) << std::endl << "\n\n";
+    std::cout << "\n  The final answer for consumer2 is: " <<  (int)(*pContent) << std::endl << "\n\n";
   
 
     /*
@@ -201,7 +201,7 @@ private:
     endTime = std::chrono::steady_clock::now();
     std::chrono::steady_clock::duration serviceLatency = endTime - startTime;
     double nSeconds = double(serviceLatency.count()) * std::chrono::steady_clock::period::num / std::chrono::steady_clock::period::den;
-    std::cout << "\n  Service Latency: " <<  nSeconds << " seconds." << std::endl;
+    std::cout << "\n  Service Latency for consumer2: " <<  nSeconds << " seconds." << std::endl;
   }
 
   void

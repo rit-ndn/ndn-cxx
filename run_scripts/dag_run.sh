@@ -114,7 +114,7 @@ clear
 set -e
 
 
-numSamples=2
+numSamples=20
 
 NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
@@ -122,34 +122,34 @@ RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
 scenarios=(
 # 4 DAG
 run_4DAG_OrchA
-#run_4DAG_OrchB
-#run_4DAG_nesco
-#run_4DAG_nescoSCOPT
+run_4DAG_OrchB
+run_4DAG_nesco
+run_4DAG_nescoSCOPT
 # 8 DAG
-#run_8DAG_OrchA
-#run_8DAG_OrchB
-#run_8DAG_nesco
-#run_8DAG_nescoSCOPT
+run_8DAG_OrchA
+run_8DAG_OrchB
+run_8DAG_nesco
+run_8DAG_nescoSCOPT
 # 8 DAG w/ caching
-#run_8DAG_Caching_OrchA
-#run_8DAG_Caching_OrchB
-#run_8DAG_Caching_nesco
-#run_8DAG_Caching_nescoSCOPT
+run_8DAG_Caching_OrchA
+run_8DAG_Caching_OrchB
+run_8DAG_Caching_nesco
+run_8DAG_Caching_nescoSCOPT
 # 20 Parallel
-#run_20Parallel_OrchA
-#run_20Parallel_OrchB
-#run_20Parallel_nesco
-#run_20Parallel_nescoSCOPT
+run_20Parallel_OrchA
+run_20Parallel_OrchB
+run_20Parallel_nesco
+run_20Parallel_nescoSCOPT
 # 20 Sensor (Parallel)
-#run_20Sensor_OrchA
-#run_20Sensor_OrchB
-#run_20Sensor_nesco
-#run_20Sensor_nescoSCOPT
+run_20Sensor_OrchA
+run_20Sensor_OrchB
+run_20Sensor_nesco
+run_20Sensor_nescoSCOPT
 # 20 Linear (new hosting using 3node topology)
-#run_20Linear_OrchA
-#run_20Linear_OrchB
-#run_20Linear_nesco
-#run_20Linear_nescoSCOPT
+run_20Linear_OrchA
+run_20Linear_OrchB
+run_20Linear_nesco
+run_20Linear_nescoSCOPT
 )
 
 example_log="$RUN_DIR/ndn-cxx/run_scripts/example.log"
@@ -161,7 +161,7 @@ if [ ! -f "$csv_out" ]; then
 	echo "$header" > "$csv_out"
 elif ! grep -q -F "$header" "$csv_out"; then
 	mv "$csv_out" "$csv_out.bak"
-	echo -e "Overwriting csv...\n"
+	echo -en "Overwriting csv...\r\n"
 	echo "$header" > "$csv_out"
 else
 	cp "$csv_out" "$csv_out.bak"
@@ -169,7 +169,7 @@ fi
 
 for scenario in "${scenarios[@]}"
 do
-	echo -e "Example: $scenario\n"
+	echo -en "Example: $scenario\r\n"
 
 	for sample in $(seq 1 $numSamples);
 	do
@@ -181,13 +181,28 @@ do
 
 		# these sed scripts depend on the order in which the logs are printed
 
-		echo -e "   Running sample #${sample}...\n"
+		echo -e "   Running sample #${sample}..."
 
 		ssh ${username}@${producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} >/dev/null 2>&1 &"
-		sleep 5
+		if 	[ ${scenario} == run_4DAG_OrchA ] || \
+			[ ${scenario} == run_4DAG_OrchB ] || \
+			[ ${scenario} == run_4DAG_nesco ] || \
+			[ ${scenario} == run_4DAG_nescoSCOPT ] || \
+			[ ${scenario} == run_8DAG_OrchA ] || \
+			[ ${scenario} == run_8DAG_OrchB ] || \
+			[ ${scenario} == run_8DAG_nesco ] || \
+			[ ${scenario} == run_8DAG_nescoSCOPT ] || \
+			[ ${scenario} == run_8DAG_Caching_OrchA ] || \
+			[ ${scenario} == run_8DAG_Caching_OrchB ] || \
+			[ ${scenario} == run_8DAG_Caching_nesco ] || \
+			[ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
+			sleep 5
+		else
+			sleep 20
+		fi
 		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep}"
 
 		consumer_parse=$( \
@@ -200,9 +215,16 @@ do
 		result="$(echo "$consumer_parse" | cut -d',' -f1)"
 		latency="$(echo "$consumer_parse" | cut -d',' -f2)"
 
+		#sleep 0.1
+		#ssh ${username}@${producerWiFiIP} "nfd-stop"
+		#ssh ${username}@${rtr1WiFiIP}     "nfd-stop"
+		#ssh ${username}@${rtr2WiFiIP}     "nfd-stop"
+		#ssh ${username}@${rtr3WiFiIP}     "nfd-stop"
+		#nfd-stop
+
 		row="$scenario, $latency, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
 
-		echo -e "   Dumping to csv...\n"
+		echo -en "   Dumping to csv...\r\n"
 		# replace existing line
 		#line_num="$(grep -n -F "$script," "$csv_out" | cut -d: -f1 | head -1)"
 		#if [ -n "$line_num" ]; then
@@ -217,4 +239,4 @@ do
 	done
 done
 
-echo -e "All examples ran\n"
+echo -en "All examples ran\r\n"
