@@ -60,6 +60,9 @@ scenario=$2
 sleepVal=$3
 
 
+NDN_DIR="$HOME/ndn"
+RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
+WORKFLOW_DIR="$NDN_DIR/ndn-cxx/run_scripts/workflows"
 
 # stop NFD to clear cache and forwarding table entries
 #nfd-stop &
@@ -501,7 +504,7 @@ if [ ${scenario} == run_4DAG_OrchA ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 1
 	fi
 fi
 
@@ -525,7 +528,7 @@ if [ ${scenario} == run_4DAG_OrchB ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 2
 	fi
 fi
 
@@ -547,7 +550,7 @@ if [ ${scenario} == run_4DAG_nesco ] || [ ${scenario} == run_4DAG_nescoSCOPT ]; 
 	if [ ${device} == consumer ]; then
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/4dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 0
 	fi
 fi
 
@@ -572,7 +575,7 @@ if [ ${scenario} == run_8DAG_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1
 	fi
 fi
 
@@ -597,7 +600,7 @@ if [ ${scenario} == run_8DAG_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2
 	fi
 
 fi
@@ -622,7 +625,7 @@ if [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_nescoSCOPT ]; 
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0
 	fi
 fi
 
@@ -647,10 +650,10 @@ if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1
 	fi
 fi
 
@@ -675,11 +678,11 @@ if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 2
 		sleep 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2
 	fi
 fi
 
@@ -703,10 +706,10 @@ if [ ${scenario} == run_8DAG_Caching_nesco ] || [ ${scenario} == run_8DAG_Cachin
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ~/mini-ndn/workflows/4dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 0
 		sleep 1
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/8dag.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0
 	fi
 fi
 
@@ -742,7 +745,7 @@ if [ ${scenario} == run_20Parallel_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-parallel.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 1
 	fi
 fi
 
@@ -778,7 +781,7 @@ if [ ${scenario} == run_20Parallel_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-parallel.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 2
 	fi
 fi
 
@@ -813,7 +816,7 @@ if [ ${scenario} == run_20Parallel_nesco ] || [ ${scenario} == run_20Parallel_ne
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-parallel.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 0
 	fi
 fi
 
@@ -868,7 +871,7 @@ if [ ${scenario} == run_20Sensor_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-sensor.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 1
 	fi
 fi
 
@@ -923,7 +926,7 @@ if [ ${scenario} == run_20Sensor_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-sensor.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 2
 	fi
 fi
 
@@ -977,7 +980,7 @@ if [ ${scenario} == run_20Sensor_nesco ] || [ ${scenario} == run_20Sensor_nescoS
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-sensor.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 0
 	fi
 fi
 
@@ -1014,7 +1017,7 @@ if [ ${scenario} == run_20Linear_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-linear.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 1
 	fi
 fi
 
@@ -1051,7 +1054,7 @@ if [ ${scenario} == run_20Linear_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-linear.json 2
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 2
 	fi
 fi
 
@@ -1087,7 +1090,7 @@ if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoS
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ~/mini-ndn/workflows/20-linear.json 0
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 0
 	fi
 fi
 

@@ -67,3 +67,7 @@ scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rtr2WiFiIP}:~/ndn/ndn-cxx/run_s
 scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rtr3WiFiIP}:~/ndn/ndn-cxx/run_scripts/
 
 
+#scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${producerWiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
+#scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr1WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
+#scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr2WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
+#scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr3WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
