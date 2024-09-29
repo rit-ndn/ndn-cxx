@@ -114,48 +114,50 @@ clear
 set -e
 
 
-numSamples=20
+numSamples=1
 
 NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
+WORKFLOW_DIR="$RUN_DIR/workflows"
+TOPOLOGY_DIR="$RUN_DIR/topologies"
 
-scenarios=(
+declare -a scenarios=(
 # 4 DAG
-run_4DAG_OrchA
-run_4DAG_OrchB
-run_4DAG_nesco
-run_4DAG_nescoSCOPT
+"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nesco nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 # 8 DAG
-run_8DAG_OrchA
-run_8DAG_OrchB
-run_8DAG_nesco
-run_8DAG_nescoSCOPT
+"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 8 DAG w/ caching
-run_8DAG_Caching_OrchA
-run_8DAG_Caching_OrchB
-run_8DAG_Caching_nesco
-run_8DAG_Caching_nescoSCOPT
-# 20 Parallel
-run_20Parallel_OrchA
-run_20Parallel_OrchB
-run_20Parallel_nesco
-run_20Parallel_nescoSCOPT
-# 20 Sensor (Parallel)
-run_20Sensor_OrchA
-run_20Sensor_OrchB
-run_20Sensor_nesco
-run_20Sensor_nescoSCOPT
-# 20 Linear (new hosting using 3node topology)
-run_20Linear_OrchA
-run_20Linear_OrchB
-run_20Linear_nesco
-run_20Linear_nescoSCOPT
+"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+# 20 Parallel (using 3node topology)
+"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_nesco nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+# 20 Sensor (using 3node topology)
+#"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+#"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+#"run_20Sensor_nesco nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+#"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+# 20 Linear (using 3node topology)
+"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nesco nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 )
 
 example_log="$RUN_DIR/ndn-cxx/run_scripts/example.log"
 consumer_log="/tmp/minindn/user/cabeee_consumer.log"
 csv_out="$RUN_DIR/perf-results-hardware.csv"
-header="Example, Service Latency, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
+header="Example, Service Latency, CPM, CPM-t_exec, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
 
 if [ ! -f "$csv_out" ]; then
 	echo "$header" > "$csv_out"
@@ -167,9 +169,20 @@ else
 	cp "$csv_out" "$csv_out.bak"
 fi
 
-for scenario in "${scenarios[@]}"
+for iterator in "${scenarios[@]}"
 do
-	echo -en "Example: $scenario\r\n"
+	read -a itrArray <<< "$iterator" #default whitespace IFS
+	scenario=${itrArray[0]}
+	type=${itrArray[1]}
+	wf=${WORKFLOW_DIR}/${itrArray[2]}
+	hosting=${WORKFLOW_DIR}/${itrArray[3]}
+	topo=${TOPOLOGY_DIR}/${itrArray[4]}
+	echo -en "Scenario: $scenario\r\n"
+	echo -en "type: $type\r\n"
+	echo -en "Workflow: $wf\r\n"
+	echo -en "Hosting: $hosting\r\n"
+	echo -en "Topology: $topo\r\n"
+
 
 	for sample in $(seq 1 $numSamples);
 	do
@@ -215,6 +228,17 @@ do
 		result="$(echo "$consumer_parse" | cut -d',' -f1)"
 		latency="$(echo "$consumer_parse" | cut -d',' -f2)"
 
+		cpm=$( \
+			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
+			-e 's/^metric is \([0-9]*\)/\1/p' \
+			| tr -d '\n' \
+		)
+		cpm_t=$( \
+			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
+			-e 's/^time is \([0-9]*\)/\1/p' \
+			| tr -d '\n' \
+		)
+
 		#sleep 0.1
 		#ssh ${username}@${producerWiFiIP} "nfd-stop"
 		#ssh ${username}@${rtr1WiFiIP}     "nfd-stop"
@@ -222,7 +246,7 @@ do
 		#ssh ${username}@${rtr3WiFiIP}     "nfd-stop"
 		#nfd-stop
 
-		row="$scenario, $latency, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
+		row="$scenario, $latency, $cpm, $cpm_t, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
 
 		echo -en "   Dumping to csv...\r\n"
 		# replace existing line
