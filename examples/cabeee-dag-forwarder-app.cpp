@@ -54,16 +54,18 @@ public:
     //m_name = servicePrefix;
     m_service = servicePrefix;
     std::cout << "Forwarder listening to: " << fullPrefix << '\n';
-    std::string shortcutOPTPrefix("/nescoSCOPT/shortcutOPT");
+    //std::string shortcutOPTPrefix("/nescoSCOPT/shortcutOPT"); // we don't want to hardcode the PREFIX
+    std::string shortcutOPTPrefix(PREFIX);
+    shortcutOPTPrefix.append("/shortcutOPT");
     shortcutOPTPrefix.append(servicePrefix);
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&Forwarder::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
-    //m_face.setInterestFilter(shortcutOPTPrefix,
-                             //std::bind(&Forwarder::onInterest, this, _2),
-                             //nullptr, // RegisterPrefixSuccessCallback is optional
-                             //std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
+    m_face.setInterestFilter(shortcutOPTPrefix,
+                             std::bind(&Forwarder::onInterest, this, _2),
+                             nullptr, // RegisterPrefixSuccessCallback is optional
+                             std::bind(&Forwarder::onRegisterFailed, this, _1, _2));
 
     auto cert = m_keyChain.getPib().getDefaultIdentity().getDefaultKey().getDefaultCertificate();
     m_certServeHandle = m_face.setInterestFilter(security::extractIdentityFromCertName(cert.getName()),
@@ -259,7 +261,7 @@ private:
     // decode the DAG string contained in the application parameters, so we can generate the new interest(s)
     //extract custom parameter from interest packet
 
-    //std::cout << "Forwarder InterestName: " << interest.getName() << '\n';
+    std::cout << "Forwarder InterestName: " << interest.getName() << '\n';
 
 
 
@@ -297,29 +299,29 @@ private:
         // only if we haven't already received a request for the service
         if (m_dagServTracker.empty()) // if we haven't generated an interest for this service, the dagServTracker will be empty
         {
-          //std::cout << " we are hosting service " << m_service.toUri() << ", looking for this service in the DAG!" << std::endl;
+          std::cout << " we are hosting service " << m_service.toUri() << ", looking for this service in the DAG!" << std::endl;
           for (auto& x : dagObject["dag"].items())
           {
-            //std::cout << "Checking x.key: " << (std::string)x.key() << '\n';
+            std::cout << "Checking x.key: " << (std::string)x.key() << '\n';
             for (auto& y : dagObject["dag"][x.key()].items())
             {
-              //std::cout << "Checking y.key: " << (std::string)y.key() << '\n';
+              std::cout << "Checking y.key: " << (std::string)y.key() << '\n';
               //if (y.key() == m_nameUri)
               if (y.key() == m_service.toUri())
               {
-                //std::cout << " FOUND IT!!" << std::endl;
-                //std::cout << "Forwarder dagServTracker data structure before: " << std::setw(2) << m_dagServTracker << '\n';
+                std::cout << " FOUND IT!!" << std::endl;
+                std::cout << "Forwarder dagServTracker data structure before: " << std::setw(2) << m_dagServTracker << '\n';
                 m_dagServTracker[(std::string)y.key()]["inputsRxed"][(std::string)x.key()] = 0;
-                //std::cout << "Forwarder dagServTracker data structure after: " << std::setw(2) << m_dagServTracker << '\n';
-                //std::cout << "x.key is " << x.key() << ", and y.key is " << y.key() << '\n';
+                std::cout << "Forwarder dagServTracker data structure after: " << std::setw(2) << m_dagServTracker << '\n';
+                std::cout << "x.key is " << x.key() << ", and y.key is " << y.key() << '\n';
 
                 m_vectorOfServiceInputs.push_back(0);             // for now, just create vector entries for the inputs, so that if they arrive out of order, we can insert at any index location
               }
             }
           }
-          //std::cout << "Forwarder dagServTracker data structure: " << std::setw(2) << m_dagServTracker << '\n';
+          std::cout << "Forwarder dagServTracker data structure: " << std::setw(2) << m_dagServTracker << '\n';
 
-          //std::cout << "Generarating all interests for required inputs..." << '\n';
+          std::cout << "Generarating all interests for required inputs..." << '\n';
           // generate all the interests for required inputs
           //for (auto& serviceInput : m_dagServTracker[(std::string)m_nameUri]["inputsRxed"].items())
           for (auto& serviceInput : m_dagServTracker[(std::string)m_service.toUri()]["inputsRxed"].items())
@@ -328,7 +330,7 @@ private:
             {
               // generate the interest for this input, sendInterest will prune the DAG and set the head properly
               std::string dagString = dagObject.dump();
-              //std::cout << "Forwarder: Generating interest for " << serviceInput.key() << '\n';
+              std::cout << "Forwarder: Generating interest for " << serviceInput.key() << '\n';
               sendInterest(serviceInput.key(), dagString);
             }
           }
