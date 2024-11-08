@@ -9,6 +9,8 @@ lenovoETHIP=192.168.20.144
 jetsonETHIP=192.168.20.145
 rpi4consumerETHIP=192.168.20.146
 rpi4consumerWiFiIP=192.168.20.147
+rpi5consumerETHIP=192.168.20.148
+rpi5consumerWiFiIP=192.168.20.149
 rpi3rtr1ETHIP=192.168.20.150
 rpi3rtr1WiFiIP=192.168.20.151
 rpi3rtr2ETHIP=192.168.20.152
@@ -31,6 +33,8 @@ jetsonETHMAC=00:00:00:00:00:01
 jetsonUSBETHMAC=00:10:60:b1:f1:1b
 rpi4consumerETHMAC=d8:3a:dd:2e:c5:1f
 rpi4consumerWiFiMAC=d8:3a:dd:2e:c5:20
+rpi5consumerETHMAC=2c:cf:67:6d:e3:7b
+rpi5consumerWiFiMAC=2c:cf:67:6d:e3:7c
 rpi3rtr1ETHMAC=b8:27:eb:19:bf:bf
 rpi3rtr1WiFiMAC=b8:27:eb:4c:ea:ea
 rpi3rtr1USBETHMAC=a0:ce:c8:cf:24:17
@@ -56,6 +60,8 @@ jetsonETHinterface=eth0
 jetsonUSBETHinterface=eth1
 rpi4consumerETHinterface=eth0
 rpi4consumerWiFiinterface=wlan0
+rpi5consumerETHinterface=eth0
+rpi5consumerWiFiinterface=wlan0
 rpi3rtr1ETHinterface=eth0
 rpi3rtr1WiFiinterface=wlan0
 rpi3rtr1USBETHinterface=enxa0cec8cf2417
@@ -79,17 +85,17 @@ rpi5producerWiFiinterface=wlan0
 
 
 
-consumerMAC=${rpi4consumerETHMAC}
+consumerMAC=${rpi5consumerETHMAC}
 rtr1MAC=${rpi5rtr1ETHMAC}
 rtr2MAC=${rpi5rtr2ETHMAC}
 rtr3MAC=${rpi5rtr3ETHMAC}
-producerMAC=${rpi3producerETHMAC}
+producerMAC=${rpi5producerETHMAC}
 
-consumerinterface=${rpi4consumerETHinterface}
+consumerinterface=${rpi5consumerETHinterface}
 rtr1interface=${rpi5rtr1ETHinterface}
 rtr2interface=${rpi5rtr2ETHinterface}
 rtr3interface=${rpi5rtr3ETHinterface}
-producerinterface=${rpi3producerETHinterface}
+producerinterface=${rpi5producerETHinterface}
 
 
 
@@ -106,13 +112,13 @@ WORKFLOW_DIR="$NDN_DIR/ndn-cxx/run_scripts/workflows"
 #nfd-stop &
 nfd-stop >/dev/null 2>&1 &
 
-sleep 1
+sleep 2
 
 # start NFD
 #nfd-start &
 nfd-start >/dev/null 2>&1 &
 
-sleep 1
+sleep 2
 
 
 # create the faces

@@ -16,6 +16,8 @@ lenovoETHIP=192.168.20.144
 jetsonETHIP=192.168.20.145
 rpi4consumerETHIP=192.168.20.146
 rpi4consumerWiFiIP=192.168.20.147
+rpi5consumerETHIP=192.168.20.148
+rpi5consumerWiFiIP=192.168.20.149
 rpi3rtr1ETHIP=192.168.20.150
 rpi3rtr1WiFiIP=192.168.20.151
 rpi3rtr2ETHIP=192.168.20.152
@@ -38,6 +40,8 @@ jetsonETHMAC=00:00:00:00:00:01
 jetsonUSBETHMAC=00:10:60:b1:f1:1b
 rpi4consumerETHMAC=d8:3a:dd:2e:c5:1f
 rpi4consumerWiFiMAC=d8:3a:dd:2e:c5:20
+rpi5consumerETHMAC=2c:cf:67:6d:e3:7b
+rpi5consumerWiFiMAC=2c:cf:67:6d:e3:7c
 rpi3rtr1ETHMAC=b8:27:eb:19:bf:bf
 rpi3rtr1WiFiMAC=b8:27:eb:4c:ea:ea
 rpi3rtr1USBETHMAC=a0:ce:c8:cf:24:17
@@ -55,14 +59,16 @@ rpi5rtr1ETHMAC=2c:cf:67:4d:af:4a
 rpi5rtr1WiFiMAC=2c:cf:67:4d:af:4b
 rpi5rtr1ETHMAC=2c:cf:67:4d:af:02
 rpi5rtr1WiFiMAC=2c:cf:67:4d:af:03
-rpi5producerETHMAC=NULL
-rpi5producerWiFiMAC=NULL
+rpi5producerETHMAC=2c:cf:67:6d:e3:69
+rpi5producerWiFiMAC=2c:cf:67:6d:e3:6c
 
 lenovoETHinterface=eno1
 jetsonETHinterface=eth0
 jetsonUSBETHinterface=eth1
 rpi4consumerETHinterface=eth0
 rpi4consumerWiFiinterface=wlan0
+rpi5consumerETHinterface=eth0
+rpi5consumerWiFiinterface=wlan0
 rpi3rtr1ETHinterface=eth0
 rpi3rtr1WiFiinterface=wlan0
 rpi3rtr1USBETHinterface=enxa0cec8cf2417
@@ -125,7 +131,7 @@ clear
 #ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 #ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 #sleep 20
-#ssh ${username}@${rpi4consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
+#ssh ${username}@${rpi5consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
 
 
 
@@ -138,7 +144,7 @@ clear
 set -e
 
 
-numSamples=1
+numSamples=20
 
 NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts"
@@ -147,38 +153,38 @@ TOPOLOGY_DIR="$RUN_DIR/topologies"
 
 declare -a scenarios=(
 # 4 DAG
-#"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_nesco nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nesco nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 # 8 DAG
-#"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 8 DAG w/ caching
-#"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 20 Parallel (using 3node topology)
-#"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_nesco nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_nesco nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 # 20 Sensor (using 3node topology)
-#"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_nesco nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nesco nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
-#"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_nesco nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nesco nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Scramble (using 3node topology)
-#"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 "run_20Scramble_nesco nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 "run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 )
@@ -225,7 +231,7 @@ do
 
 		echo -e "   Running sample #${sample}..."
 
-		ssh ${username}@${rpi3producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} >/dev/null 2>&1 &"
 		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} >/dev/null 2>&1 &"
