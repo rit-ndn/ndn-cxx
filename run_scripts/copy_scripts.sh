@@ -91,7 +91,7 @@ rpi5producerWiFiinterface=wlan0
 
 
 
-scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi3producerWiFiIP}:~/ndn/ndn-cxx/run_scripts/
+scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi5producerWiFiIP}:~/ndn/ndn-cxx/run_scripts/
 scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi5rtr1WiFiIP}:~/ndn/ndn-cxx/run_scripts/
 scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi5rtr2WiFiIP}:~/ndn/ndn-cxx/run_scripts/
 scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi5rtr3WiFiIP}:~/ndn/ndn-cxx/run_scripts/

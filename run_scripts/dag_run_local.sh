@@ -112,13 +112,13 @@ WORKFLOW_DIR="$NDN_DIR/ndn-cxx/run_scripts/workflows"
 #nfd-stop &
 nfd-stop >/dev/null 2>&1 &
 
-sleep 2
+sleep 5
 
 # start NFD
 #nfd-start &
 nfd-start >/dev/null 2>&1 &
 
-sleep 2
+sleep 5
 
 
 # create the faces
@@ -533,7 +533,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
 	fi
 	if [ ${device} == rtr3 ]; then
-		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr2MAC}]
@@ -552,7 +552,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
 	fi
 	if [ ${device} == rtr2 ]; then
-		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr3MAC}]
@@ -572,7 +572,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 
 	fi
 	if [ ${device} == rtr1 ]; then
-		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${producerMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
@@ -589,7 +589,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr2MAC}]
 	fi
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${producerMAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${producerMAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr1MAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr1MAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr1MAC}]
