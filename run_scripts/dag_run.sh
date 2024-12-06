@@ -138,11 +138,11 @@ clear
 
 
 
-
-
-
 set -e
 
+
+changeLinkDelay=1
+linkDelayMS=0.9
 
 numSamples=20
 
@@ -231,10 +231,10 @@ do
 
 		echo -e "   Running sample #${sample}..."
 
-		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
 		if 	[ ${scenario} == run_4DAG_OrchA ] || \
 			[ ${scenario} == run_4DAG_OrchB ] || \
 			[ ${scenario} == run_4DAG_nesco ] || \
@@ -251,7 +251,7 @@ do
 		else
 			sleep 20
 		fi
-		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep}"
+		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS}"
 
 		consumer_parse=$( \
 			${cmd} |& tee /dev/tty | sed -n \

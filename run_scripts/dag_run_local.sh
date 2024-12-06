@@ -84,6 +84,11 @@ rpi5producerWiFiinterface=wlan0
 
 
 
+consumerIP=${rpi5consumerETHIP}
+rtr1IP=${rpi5rtr1ETHIP}
+rtr2IP=${rpi5rtr2ETHIP}
+rtr3IP=${rpi5rtr3ETHIP}
+producerIP=${rpi5producerETHIP}
 
 consumerMAC=${rpi5consumerETHMAC}
 rtr1MAC=${rpi5rtr1ETHMAC}
@@ -102,6 +107,8 @@ producerinterface=${rpi5producerETHinterface}
 device=$1
 scenario=$2
 sleepVal=$3
+changeLinkDelay=$4
+linkDelayMS=$5
 
 
 NDN_DIR="$HOME/ndn"
@@ -119,6 +126,47 @@ sleep 5
 nfd-start >/dev/null 2>&1 &
 
 sleep 5
+
+
+
+# change link delay
+if [ ${changeLinkDelay} == 1 ]; then
+	sudo tc qdisc del dev eth0 root # remove any existing delay
+#	if [ ${device} == producer ]; then
+#		echo -en "Changing link delay for the producer\r\n"
+#		ping_results=$(ping -c 10 "${rtr1IP}" | grep 'time=' | awk -F'time=' '{print $2}' | awk '{print $1}')
+#	fi
+#	if [ ${device} == rtr1 ]; then
+#		echo -en "Changing link delay for rtr1\r\n"
+#		ping_results=$(ping -c 10 "${rtr2IP}" | grep 'time=' | awk -F'time=' '{print $2}' | awk '{print $1}')
+#	fi
+#	if [ ${device} == rtr2 ]; then
+#		echo -en "Changing link delay for rtr2\r\n"
+#		ping_results=$(ping -c 10 "${rtr3IP}" | grep 'time=' | awk -F'time=' '{print $2}' | awk '{print $1}')
+#	fi
+#	if [ ${device} == rtr3 ]; then
+#		echo -en "Changing link delay for rtr3\r\n"
+#		ping_results=$(ping -c 10 "${consumerIP}" | grep 'time=' | awk -F'time=' '{print $2}' | awk '{print $1}')
+#	fi
+#	if [ ${device} == consumer ]; then
+#		echo -en "Changing link delay for the consumer\r\n"
+#		ping_results=$(ping -c 10 "${rtr3IP}" | grep 'time=' | awk -F'time=' '{print $2}' | awk '{print $1}')
+#	fi
+	# Calculate the average ping time
+#	sum=0
+#	count=0
+#	for time in $ping_results; do
+# 		sum=$(echo "$sum + $time" | bc)
+#		((count++))
+#	done
+#	average=$(echo "scale=2; $sum / $count" | bc)
+#	echo -en "Average ping time: $average ms\r\n"
+#	echo -en "Target link delay: $linkDelayMS ms\r\n"
+#	RTTdelayToAdd=$(bc -l <<< "scale=2;$linkDelayMS - ($average/2)")
+	RTTdelayToAdd=$linkDelayMS
+	echo -en "Adding $RTTdelayToAdd ms of RTT link delay to achieve a final link delay of $linkDelayMS, ping RTT will be twice link delay.\r\n"
+	sudo tc qdisc add dev eth0 root netem delay ${RTTdelayToAdd}ms
+fi
 
 
 # create the faces
