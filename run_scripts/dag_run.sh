@@ -138,11 +138,11 @@ clear
 
 
 
-
-
-
 set -e
 
+
+changeLinkDelay=1
+linkDelayMS=0.9
 
 numSamples=20
 
@@ -155,37 +155,37 @@ declare -a scenarios=(
 # 4 DAG
 "run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 "run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_nesco nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 "run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 # 8 DAG
 "run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 8 DAG w/ caching
 "run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_nesco nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 20 Parallel (using 3node topology)
 "run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 "run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_nesco nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 "run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 # 20 Sensor (using 3node topology)
-"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nesco nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
 "run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 "run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_nesco nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 "run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Scramble (using 3node topology)
 "run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 "run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_nesco nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 "run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 )
 
@@ -231,10 +231,10 @@ do
 
 		echo -e "   Running sample #${sample}..."
 
-		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh producer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr1     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr2     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts/dag_run_local.sh rtr3     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} >/dev/null 2>&1 &"
 		if 	[ ${scenario} == run_4DAG_OrchA ] || \
 			[ ${scenario} == run_4DAG_OrchB ] || \
 			[ ${scenario} == run_4DAG_nesco ] || \
@@ -251,7 +251,7 @@ do
 		else
 			sleep 20
 		fi
-		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep}"
+		cmd="$HOME/ndn/ndn-cxx/run_scripts/dag_run_local.sh consumer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS}"
 
 		consumer_parse=$( \
 			${cmd} |& tee /dev/tty | sed -n \
