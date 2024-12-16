@@ -256,6 +256,8 @@ private:
   void
   onInterest(const Interest& interest)
   {
+    m_interestProcessingTimeStart = time::steady_clock::now();
+
     //std::cout << ">> I: " << interest << std::endl;
 
     // decode the DAG string contained in the application parameters, so we can generate the new interest(s)
@@ -404,8 +406,14 @@ private:
 
       //TODO: for now, I just force the single m_nameUri to be the same as the received interest name.
       m_nameUri = rxedInterestName;
+
+      m_interestProcessingTimeEnd = time::steady_clock::now();
+      std::cout << "interestProcessingTimeNDN-CXX: " << (m_interestProcessingTimeEnd - m_interestProcessingTimeStart) << '\n';
     }
 
+    // don't calculate interestProcessingTime below, because we don't want to include "shorter" time for processing /shortcutOPT interests
+    //m_interestProcessingTimeEnd = time::steady_clock::now();
+    //std::cout << "interestProcessingTimeNDN-CXX: " << (m_interestProcessingTimeEnd - m_interestProcessingTimeStart) << '\n';
   }
 
 
@@ -711,6 +719,8 @@ private:
   json m_dagServTracker; // with this data structure, we can keep track of WHICH inputs have arrived, rather than just the NUMBER of inputs. (in case one inputs arrives multiple times)
   json m_dagObject;
   std::vector <unsigned char> m_vectorOfServiceInputs;
+  time::steady_clock::time_point m_interestProcessingTimeStart;
+  time::steady_clock::time_point m_interestProcessingTimeEnd;
 };
 
 } // namespace examples
