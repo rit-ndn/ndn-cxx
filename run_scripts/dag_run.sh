@@ -141,7 +141,7 @@ clear
 set -e
 
 
-changeLinkDelay=1
+changeLinkDelay=0
 linkDelayMS=0.9
 
 numSamples=20
