@@ -58,6 +58,7 @@ public:
     std::string shortcutOPTPrefix(PREFIX);
     shortcutOPTPrefix.append("/shortcutOPT");
     shortcutOPTPrefix.append(servicePrefix);
+    m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&Forwarder::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
@@ -672,6 +673,13 @@ private:
       //std::cout << "<< D: " << *new_data << std::endl;
       m_face.put(*new_data);
 
+
+      // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+      // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+      allInputsReceived = 0;
+      m_dagServTracker.clear();
+      m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+
     }
     //else
     //{
@@ -721,6 +729,7 @@ private:
   std::vector <unsigned char> m_vectorOfServiceInputs;
   time::steady_clock::time_point m_interestProcessingTimeStart;
   time::steady_clock::time_point m_interestProcessingTimeEnd;
+  ndn::time::milliseconds m_lowestFreshness_ms;
 };
 
 } // namespace examples

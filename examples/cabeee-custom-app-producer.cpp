@@ -26,6 +26,9 @@
 #include <iostream>
 #include <ndn-cxx/util/io.hpp>
 
+#include <ndn-cxx/util/random.hpp>
+
+
 // Enclosing code in ndn simplifies coding (can also use `using namespace ndn`)
 namespace ndn {
 // Additional nested namespaces should be used to prevent/limit name conflicts
@@ -35,7 +38,8 @@ class Producer
 {
 public:
   void
-  run(char* PREFIX, char* servicePrefix)
+  //run(char* PREFIX, char* servicePrefix)
+  run(char* PREFIX, char* servicePrefix, char* freshnessPeriod_ms, char* uniformFreshness, char* minFreshness_ms, char* maxFreshness_ms)
   {
     std::string fullPrefix(PREFIX);
     fullPrefix.append(servicePrefix);
@@ -44,6 +48,15 @@ public:
                              std::bind(&Producer::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
                              std::bind(&Producer::onRegisterFailed, this, _1, _2));
+
+    m_freshnessPeriod_ms = atoi(freshnessPeriod_ms);
+    m_uniformFreshness = atoi(uniformFreshness);
+    m_minFreshness_ms = atoi(minFreshness_ms);
+    m_maxFreshness_ms = atoi(maxFreshness_ms);
+    if (m_uniformFreshness == 1)
+    {
+      m_freshnessPeriod_ms = (random::generateWord32() % (m_maxFreshness_ms - m_minFreshness_ms)) + m_minFreshness_ms;
+    }
 
     auto cert = m_keyChain.getPib().getDefaultIdentity().getDefaultKey().getDefaultCertificate();
     m_certServeHandle = m_face.setInterestFilter(security::extractIdentityFromCertName(cert.getName()),
@@ -63,6 +76,11 @@ private:
     // Create Data packet
     auto data = std::make_shared<Data>();
     data->setName(interest.getName());
+    if (m_uniformFreshness == 2)
+    {
+      m_freshnessPeriod_ms = (random::generateWord32() % (m_maxFreshness_ms - m_minFreshness_ms)) + m_minFreshness_ms;
+    }
+    data->setFreshnessPeriod(time::milliseconds(m_freshnessPeriod_ms));
     data->setFreshnessPeriod(9_s);
 
 
@@ -108,6 +126,10 @@ private:
   Face m_face;
   KeyChain m_keyChain;
   ScopedRegisteredPrefixHandle m_certServeHandle;
+  int m_freshnessPeriod_ms;
+  int m_uniformFreshness;
+  int m_minFreshness_ms;
+  int m_maxFreshness_ms;
 };
 
 } // namespace examples
@@ -118,7 +140,8 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Producer producer;
-    producer.run(argv[1], argv[2]);
+    //producer.run(argv[1], argv[2]);
+    producer.run(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]); // prefix, name, freshness(ms), uniform, min, max
     return 0;
   }
   catch (const std::exception& e) {
