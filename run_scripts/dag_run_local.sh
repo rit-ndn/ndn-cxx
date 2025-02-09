@@ -747,7 +747,7 @@ sleep 1
 
 if [ ${scenario} == run_4DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /service2 &
@@ -772,7 +772,7 @@ fi
 if [ ${scenario} == run_4DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /service2 &
@@ -796,7 +796,7 @@ fi
 if [ ${scenario} == run_4DAG_nesco ] || [ ${scenario} == run_4DAG_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service2 &
@@ -817,7 +817,7 @@ fi
 
 if [ ${scenario} == run_8DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /service2 &
@@ -842,7 +842,7 @@ fi
 
 if [ ${scenario} == run_8DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /service2 &
@@ -868,7 +868,7 @@ fi
 
 if [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service2 &
@@ -892,7 +892,7 @@ fi
 
 if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /service2 &
@@ -949,7 +949,7 @@ fi
 
 if [ ${scenario} == run_8DAG_Caching_nesco ] || [ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /service2 &
@@ -976,7 +976,7 @@ fi
 
 if [ ${scenario} == run_20Parallel_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}
@@ -1015,7 +1015,7 @@ fi
 
 if [ ${scenario} == run_20Parallel_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}
@@ -1054,7 +1054,7 @@ fi
 
 if [ ${scenario} == run_20Parallel_nesco ] || [ ${scenario} == run_20Parallel_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}
@@ -1092,26 +1092,26 @@ fi
 
 if [ ${scenario} == run_20Sensor_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal};
@@ -1150,26 +1150,26 @@ fi
 
 if [ ${scenario} == run_20Sensor_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal};
@@ -1208,26 +1208,26 @@ fi
 
 if [ ${scenario} == run_20Sensor_nesco ] || [ ${scenario} == run_20Sensor_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 &
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor7 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor8 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor9 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor10 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor11 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor12 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor13 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor14 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor15 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor16 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor17 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor18 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor19 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor20 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal};
@@ -1265,7 +1265,7 @@ fi
 
 if [ ${scenario} == run_20Linear_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL2 &
@@ -1302,7 +1302,7 @@ fi
 
 if [ ${scenario} == run_20Linear_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL2 &
@@ -1339,7 +1339,7 @@ fi
 
 if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL2 &
@@ -1375,7 +1375,7 @@ fi
 
 if [ ${scenario} == run_20Scramble_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL1 &
@@ -1412,7 +1412,7 @@ fi
 
 if [ ${scenario} == run_20Scramble_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL1 &
@@ -1449,7 +1449,7 @@ fi
 
 if [ ${scenario} == run_20Scramble_nesco ] || [ ${scenario} == run_20Scramble_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL1 &

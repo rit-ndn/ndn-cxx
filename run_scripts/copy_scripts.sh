@@ -101,3 +101,10 @@ scp ~/ndn/ndn-cxx/run_scripts/*.sh ${username}@${rpi5rtr3WiFiIP}:~/ndn/ndn-cxx/r
 #scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr1WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
 #scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr2WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
 #scp ~/ndn/ndn-cxx/run_scripts/workflows/* ${username}@${rtr3WiFiIP}:~/ndn/ndn-cxx/run_scripts/workflows/
+
+
+
+scp ~/ndn/NLSR/nlsr*.conf ${username}@${rpi5producerWiFiIP}:~/ndn/NLSR/
+scp ~/ndn/NLSR/nlsr*.conf ${username}@${rpi5rtr1WiFiIP}:~/ndn/NLSR/
+scp ~/ndn/NLSR/nlsr*.conf ${username}@${rpi5rtr2WiFiIP}:~/ndn/NLSR/
+scp ~/ndn/NLSR/nlsr*.conf ${username}@${rpi5rtr3WiFiIP}:~/ndn/NLSR/

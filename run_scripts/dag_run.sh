@@ -55,10 +55,10 @@ rpi3producerETHMAC=b8:27:eb:a6:27:12
 rpi3producerWiFiMAC=b8:27:eb:f3:72:47
 rpi5rtr1ETHMAC=2c:cf:67:4d:ad:2b
 rpi5rtr1WiFiMAC=2c:cf:67:4d:ad:2c
-rpi5rtr1ETHMAC=2c:cf:67:4d:af:4a
-rpi5rtr1WiFiMAC=2c:cf:67:4d:af:4b
-rpi5rtr1ETHMAC=2c:cf:67:4d:af:02
-rpi5rtr1WiFiMAC=2c:cf:67:4d:af:03
+rpi5rtr2ETHMAC=2c:cf:67:4d:af:4a
+rpi5rtr2WiFiMAC=2c:cf:67:4d:af:4b
+rpi5rtr3ETHMAC=2c:cf:67:4d:af:02
+rpi5rtr3WiFiMAC=2c:cf:67:4d:af:03
 rpi5producerETHMAC=2c:cf:67:6d:e3:69
 rpi5producerWiFiMAC=2c:cf:67:6d:e3:6c
 
