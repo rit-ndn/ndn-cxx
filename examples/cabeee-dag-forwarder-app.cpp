@@ -477,6 +477,10 @@ private:
     // perhaps keep a mapping of signature to requesting service, and use the received signature to determine which service version asked for it
     //TODO4: for now, this works with a single version of each service. We can not have the same service appear twice in the same DAG until we make the changes above.
 
+    ndn::time::milliseconds data_freshnessPeriod = data.getFreshnessPeriod();
+    if (data_freshnessPeriod < m_lowestFreshness_ms) {
+      m_lowestFreshness_ms = data_freshnessPeriod;
+    }
 
     //std::cout << " data received - looking for index number. m_dagObject is currently: " << std::setw(2) << m_dagObject << std::endl;
     //std::cout << " data received - rxedDataName: " << rxedDataName << std::endl;
@@ -642,7 +646,8 @@ private:
       // Create new Data packet
       auto new_data = std::make_shared<Data>();
       new_data->setName(m_nameAndDigest);
-      new_data->setFreshnessPeriod(9_s);
+      //new_data->setFreshnessPeriod(9_s);
+      new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
 
       unsigned char myBuffer[1024];
       // write to the buffer

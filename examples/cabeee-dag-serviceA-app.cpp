@@ -55,6 +55,7 @@ public:
     m_service = servicePrefix;
     m_nameUri = m_name.ndn::Name::toUri();
     std::cout << "ServiceA listening to: " << fullPrefix << '\n';
+    m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&ServiceA::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
@@ -88,7 +89,7 @@ private:
 
 
     Interest interest(m_PREFIX + interestName);
-    //interest.setMustBeFresh(true);
+    interest.setMustBeFresh(true);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
 
@@ -140,7 +141,8 @@ private:
       // Create new Data packet
       auto new_data = std::make_shared<Data>();
       new_data->setName(interest.getName());
-      new_data->setFreshnessPeriod(9_s);
+      //new_data->setFreshnessPeriod(9_s);
+      new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
       unsigned char myBuffer[1024];
       // write to the buffer
       myBuffer[0] = m_serviceOutput;
@@ -288,6 +290,10 @@ private:
     //m_mapOfServiceInputs[rxedDataName] = (*pServiceInput);
 
 
+    ndn::time::milliseconds data_freshnessPeriod = data.getFreshnessPeriod();
+    if (data_freshnessPeriod < m_lowestFreshness_ms) {
+      m_lowestFreshness_ms = data_freshnessPeriod;
+    }
 
     // we keep track of which input is for which interest that was sent out. Data packets may arrive in different order than how interests were sent out.
     // just read the index from the dagObject JSON structure
@@ -447,7 +453,8 @@ private:
       // Create new Data packet
       auto new_data = std::make_shared<Data>();
       new_data->setName(m_nameAndDigest);
-      new_data->setFreshnessPeriod(9_s);
+      //new_data->setFreshnessPeriod(9_s);
+      new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
 
       unsigned char myBuffer[1024];
       // write to the buffer
@@ -479,12 +486,18 @@ private:
       m_face.put(*new_data);
 
 
+      // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+      // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+      m_dagServTracker.clear();
+      m_vectorOfServiceInputs.erase(m_vectorOfServiceInputs.begin(), m_vectorOfServiceInputs.end());
+      m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+
       // in order to "host" the data locally, we must store it, and set a flag that is checked at "onInterest" above
       // This is a one time deal. Assumes data will be available and fresh from now on.
       // OR we can just let the content store deal with storing results
 
       // so now, we do the same for the copy that we store in m_data as we did for new_data above
-      m_done = true;
+      //m_done = true;
       //m_data.ndn::setName(m_nameAndDigest);
       //m_data.setFreshnessPeriod(ndn::time::milliseconds(9000));
       //m_data.setContent(myBuffer, 1024);
@@ -538,6 +551,7 @@ private:
   json m_dagServTracker;
   json m_dagObject;
   std::vector <unsigned char> m_vectorOfServiceInputs;
+  ndn::time::milliseconds m_lowestFreshness_ms;
 };
 
 } // namespace examples

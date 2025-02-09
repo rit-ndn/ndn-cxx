@@ -53,6 +53,7 @@ public:
     //m_name = servicePrefix;
     //m_service = servicePrefix;
     std::cout << "OrchestratorA listening to: " << fullPrefix << '\n';
+    m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&OrchestratorA::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
@@ -86,7 +87,7 @@ private:
 
 
     Interest interest(m_PREFIX + interestName);
-    //interest.setMustBeFresh(true);
+    interest.setMustBeFresh(true);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
     // overwrite the dag parameter "head" value and generate new application parameters (thus calculating new sha256 digest)
@@ -185,6 +186,9 @@ private:
     // here we generate just the first interest(s) according to the workflow (not backwards as done in our proposed forwarder-based methodology).
     // to do this, we must discover which services in the DAG are "root" services (services which don't have inputs coming from other services, for example: sensors).
 
+    m_listOfServicesWithInputs.clear();
+    m_listOfRootServices.clear();
+    m_listOfSinkNodes.clear();
     for (auto& x : m_dagObject["dag"].items())
     {
       m_listOfRootServices.push_back(x.key()); // for now, add ALL keys to the list, we'll remove non-root ones later
@@ -305,6 +309,12 @@ private:
     std::string rxedDataName = simpleName.toUri();
 
 
+    ndn::time::milliseconds data_freshnessPeriod = data.getFreshnessPeriod();
+    if (data_freshnessPeriod < m_lowestFreshness_ms) {
+      m_lowestFreshness_ms = data_freshnessPeriod;
+    }
+
+
     // mark down this input as having been received for all services that use this data as an input
     for (auto& service : m_dagOrchTracker.items())
     {
@@ -364,7 +374,8 @@ private:
           // Create new Data packet
           auto new_data = std::make_shared<Data>();
           new_data->setName(m_nameAndDigest);
-          new_data->setFreshnessPeriod(9_s);
+          //new_data->setFreshnessPeriod(9_s);
+          new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
           new_data->setContent(data.getContent());
 
 
@@ -390,6 +401,14 @@ private:
           // Return Data packet to the requester
           //std::cout << "<< D: " << *new_data << std::endl;
           m_face.put(*new_data);
+
+          // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+          // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+          m_dagOrchTracker.clear();
+          m_listOfServicesWithInputs.clear();
+          m_listOfRootServices.clear();
+          m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+          //m_listOfSinkNodes.clear();
 
         }
       }
@@ -439,6 +458,7 @@ private:
   std::list <std::string> m_listOfServicesWithInputs;   // keeps track of which services have inputs
   std::list <std::string> m_listOfRootServices;         // keeps track of which services don't have any inputs
   std::list <std::string> m_listOfSinkNodes;            // keeps track of which node doesn't have an output (usually this is just the consumer)
+  ndn::time::milliseconds m_lowestFreshness_ms;
 };
 
 } // namespace examples
