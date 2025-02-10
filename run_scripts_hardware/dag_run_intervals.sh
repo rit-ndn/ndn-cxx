@@ -126,12 +126,12 @@ clear
 # or
 #ssh <username>@<ip_address> "<command> >/dev/null 2>&1 &"
 
-#ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh producer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-#ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-#ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
-#ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh producer ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr1     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr2     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
+#ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr3     ${scenario} ${PREFIX} ${sleep} >/dev/null 2>&1 &"
 #sleep 20
-#ssh ${username}@${rpi5consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh consumer ${scenario} ${PREFIX} ${sleep}"
+#ssh ${username}@${rpi5consumerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh consumer ${scenario} ${PREFIX} ${sleep}"
 
 
 
@@ -144,7 +144,9 @@ set -e
 changeLinkDelay=0
 linkDelayMS=0.9
 
-numSamples=20
+numSamples=1
+poissonRate=10
+poissonTotal=100
 
 NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts_hardware"
@@ -152,46 +154,26 @@ WORKFLOW_DIR="$RUN_DIR/workflows"
 TOPOLOGY_DIR="$RUN_DIR/topologies"
 
 declare -a scenarios=(
-# 4 DAG
-"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-# 8 DAG
-"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-# 8 DAG w/ caching
-"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-# 20 Parallel (using 3node topology)
-"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-# 20 Sensor (using 3node topology)
-"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	# 20 Sensor (using 3node topology)
+	"run_intervals_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+####"run_intervals_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
-"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+####"run_intervals_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Scramble (using 3node topology)
-"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+####"run_intervals_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 )
 
 consumerLog="$RUN_DIR/cabeee_consumer.log"
-csv_out="$RUN_DIR/perf-results-hardware.csv"
-header="Example, Service Latency, CPM, CPM-t_exec, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
+csv_out="$RUN_DIR/perf-results-hardware_intervals.csv"
+header="Example, Service Latency, CPM, CPM-t_exec, Min Service Latency (s), Low Quartile Service Latency (s), Mid Quartile Service Latency (s), High Quartile Service Latency (s), Max Service Latency (s), Total Service Latency(s), Avg Service Latency(s), Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
 
 if [ ! -f "$csv_out" ]; then
 	echo "$header" > "$csv_out"
@@ -201,6 +183,13 @@ elif ! grep -q -F "$header" "$csv_out"; then
 	echo "$header" > "$csv_out"
 else
 	cp "$csv_out" "$csv_out.bak"
+fi
+
+if [ ! -f "$consumerLog" ]; then
+	echo "Creating consumer log file"
+else
+	echo "Creating backup of existing consumer log file"
+	mv "$consumerLog" "$consumerLog.bak"
 fi
 
 for iterator in "${scenarios[@]}"
@@ -230,37 +219,41 @@ do
 
 		echo -e "   Running sample #${sample}..."
 
-		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh producer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr1     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr2     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} >/dev/null 2>&1 &"
-		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh rtr3     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} >/dev/null 2>&1 &"
-		if 	[ ${scenario} == run_4DAG_OrchA ] || \
-			[ ${scenario} == run_4DAG_OrchB ] || \
-			[ ${scenario} == run_4DAG_nesco ] || \
-			[ ${scenario} == run_4DAG_nescoSCOPT ] || \
-			[ ${scenario} == run_8DAG_OrchA ] || \
-			[ ${scenario} == run_8DAG_OrchB ] || \
-			[ ${scenario} == run_8DAG_nesco ] || \
-			[ ${scenario} == run_8DAG_nescoSCOPT ] || \
-			[ ${scenario} == run_8DAG_Caching_OrchA ] || \
-			[ ${scenario} == run_8DAG_Caching_OrchB ] || \
-			[ ${scenario} == run_8DAG_Caching_nesco ] || \
-			[ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
-			sleep 5
-		else
-			sleep 20
-		fi
-		cmd="$HOME/ndn/ndn-cxx/run_scripts_hardware/dag_run_local.sh consumer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog}"
+		ssh ${username}@${rpi5producerWiFiIP} "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh producer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr1WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr1     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr2WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr2     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal} >/dev/null 2>&1 &"
+		ssh ${username}@${rpi5rtr3WiFiIP}     "~/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh rtr3     ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal} >/dev/null 2>&1 &"
+		sleep 20
+		cmd="$HOME/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh consumer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal}"
 
 		consumer_parse=$( \
 			${cmd} |& tee /dev/tty | sed -n \
 			-e 's/^\s*The final answer is: \([0-9]*\)$/\1,/p' \
-			-e 's/^\s*Service Latency: \([0-9\.]*\) seconds.$/\1,/p' \
 			| tr -d '\n' \
 		)
 
 		result="$(echo "$consumer_parse" | cut -d',' -f1)"
-		latency="$(echo "$consumer_parse" | cut -d',' -f2)"
+
+
+		latencies=$( \
+			python3 process_nfd_logs_intervals.py | sed -n \
+			-e 's/^\s*min latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*low latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*mid latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*high latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*max latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*total latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*avg latency: \([0-9\.]*\) seconds$/\1,/p' \
+			| tr -d '\n' \
+		)
+		min_latency="$(echo "$latencies" | cut -d',' -f1)"
+		low_latency="$(echo "$latencies" | cut -d',' -f2)"
+		mid_latency="$(echo "$latencies" | cut -d',' -f3)"
+		high_latency="$(echo "$latencies" | cut -d',' -f4)"
+		max_latency="$(echo "$latencies" | cut -d',' -f5)"
+		total_latency="$(echo "$latencies" | cut -d',' -f6)"
+		avg_latency="$(echo "$latencies" | cut -d',' -f7)"
+
 
 		cpm=$( \
 			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
@@ -280,7 +273,7 @@ do
 		#ssh ${username}@${rpi5rtr3WiFiIP}     "nfd-stop"
 		#nfd-stop
 
-		row="$scenario, $latency, $cpm, $cpm_t, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
+		row="$scenario, $latency, $cpm, $cpm_t, $min_latency, $low_latency, $mid_latency, $high_latency, $max_latency, $total_latency, $avg_latency, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
 
 		echo -en "   Dumping to csv...\r\n"
 		# replace existing line
