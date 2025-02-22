@@ -172,29 +172,34 @@ if [ ${changeLinkDelay} == 1 ]; then
 fi
 
 
-# create the faces
+# create the faces and set the content store size
 if [ ${device} == producer ]; then
-	echo -en "Creating faces for the producer\r\n"
+	echo -en "Creating faces and setting CS size for the producer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1MAC}] local dev://${producerinterface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 0
 fi
 if [ ${device} == rtr1 ]; then
-	echo -en "Creating faces for rtr1\r\n"
+	echo -en "Creating faces and setting CS size for rtr1\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${producerMAC}] local dev://${rtr1interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2MAC}] local dev://${rtr1interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == rtr2 ]; then
-	echo -en "Creating faces for rtr2\r\n"
+	echo -en "Creating faces and setting CS size for rtr2\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1MAC}] local dev://${rtr2interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3MAC}] local dev://${rtr2interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == rtr3 ]; then
-	echo -en "Creating faces for rtr3\r\n"
+	echo -en "Creating faces and setting CS size for rtr3\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2MAC}] local dev://${rtr3interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${consumerMAC}] local dev://${rtr3interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == consumer ]; then
-	echo -en "Creating faces for the consumer\r\n"
+	echo -en "Creating faces and setting CS size for the consumer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3MAC}] local dev://${consumerinterface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 0
 fi
 
 
