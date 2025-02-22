@@ -155,25 +155,25 @@ TOPOLOGY_DIR="$RUN_DIR/topologies"
 
 declare -a scenarios=(
 	# 20 Sensor (using 3node topology)
-	"run_intervals_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-	"run_intervals_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-	"run_intervals_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
-	"run_intervals_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-	"run_intervals_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-	"run_intervals_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Scramble (using 3node topology)
-	"run_intervals_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 	"run_intervals_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-	"run_intervals_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	#"run_intervals_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 )
 
 consumerLog="$RUN_DIR/cabeee_consumer.log"
 csv_out="$RUN_DIR/perf-results-hardware_intervals.csv"
-header="Example, Service Latency, CPM, CPM-t_exec, Min Service Latency (s), Low Quartile Service Latency (s), Mid Quartile Service Latency (s), High Quartile Service Latency (s), Max Service Latency (s), Total Service Latency(s), Avg Service Latency(s), Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
+header="Example, Service Latency, CPM, CPM-t_exec, Min Service Latency(s), Low Quartile Service Latency(s), Mid Quartile Service Latency(s), High Quartile Service Latency(s), Max Service Latency(s), Total Service Latency(s), Avg Service Latency(s), Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
 
 if [ ! -f "$csv_out" ]; then
 	echo "$header" > "$csv_out"
@@ -277,14 +277,14 @@ do
 
 		echo -en "   Dumping to csv...\r\n"
 		# replace existing line
-		#line_num="$(grep -n -F "$script," "$csv_out" | cut -d: -f1 | head -1)"
-		#if [ -n "$line_num" ]; then
-			#sed --in-place -e "${line_num}c\\$row" "$csv_out"
-		#else
-			#echo "$row" >> "$csv_out"
-		#fi
+		line_num="$(grep -n -F "$scenario," "$csv_out" | cut -d: -f1 | head -1)"
+		if [ -n "$line_num" ]; then
+			sed --in-place -e "${line_num}c\\$row" "$csv_out"
+		else
+			echo "$row" >> "$csv_out"
+		fi
 		# don't replace, just add this run to the bottom of the file
-		echo "$row" >> "$csv_out"
+		#echo "$row" >> "$csv_out"
 
 		echo ""
 	done
