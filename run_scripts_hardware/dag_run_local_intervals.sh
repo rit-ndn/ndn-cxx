@@ -110,6 +110,8 @@ sleepVal=$3
 changeLinkDelay=$4
 linkDelayMS=$5
 consumerLog=$6
+poissonRate=$7
+poissonTotal=$8
 
 
 NDN_DIR="$HOME/ndn"
@@ -170,83 +172,88 @@ if [ ${changeLinkDelay} == 1 ]; then
 fi
 
 
-# create the faces
+# create the faces and set the content store size
 if [ ${device} == producer ]; then
-	echo -en "Creating faces for the producer\r\n"
+	echo -en "Creating faces and setting CS size for the producer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1MAC}] local dev://${producerinterface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 0
 fi
 if [ ${device} == rtr1 ]; then
-	echo -en "Creating faces for rtr1\r\n"
+	echo -en "Creating faces and setting CS size for rtr1\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${producerMAC}] local dev://${rtr1interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2MAC}] local dev://${rtr1interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == rtr2 ]; then
-	echo -en "Creating faces for rtr2\r\n"
+	echo -en "Creating faces and setting CS size for rtr2\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr1MAC}] local dev://${rtr2interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3MAC}] local dev://${rtr2interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == rtr3 ]; then
-	echo -en "Creating faces for rtr3\r\n"
+	echo -en "Creating faces and setting CS size for rtr3\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr2MAC}] local dev://${rtr3interface} persistency permanent
 	sleep ${sleepVal}; nfdc face create remote ether://[${consumerMAC}] local dev://${rtr3interface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 1000
 fi
 if [ ${device} == consumer ]; then
-	echo -en "Creating faces for the consumer\r\n"
+	echo -en "Creating faces and setting CS size for the consumer\r\n"
 	sleep ${sleepVal}; nfdc face create remote ether://[${rtr3MAC}] local dev://${consumerinterface} persistency permanent
+	sleep ${sleepVal}; nfdc cs config capacity 0
 fi
 
 
-if 	[ ${scenario} == run_4DAG_OrchA ] || \
-	[ ${scenario} == run_8DAG_OrchA ] || \
-	[ ${scenario} == run_8DAG_Caching_OrchA ] || \
-	[ ${scenario} == run_20Parallel_OrchA ] || \
-	[ ${scenario} == run_20Sensor_OrchA ] || \
-	[ ${scenario} == run_20Linear_OrchA ] || \
-	[ ${scenario} == run_20Scramble_OrchA ]; then
+if 	[ ${scenario} == run_intervals_4DAG_OrchA ] || \
+	[ ${scenario} == run_intervals_8DAG_OrchA ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_OrchA ] || \
+	[ ${scenario} == run_intervals_20Parallel_OrchA ] || \
+	[ ${scenario} == run_intervals_20Sensor_OrchA ] || \
+	[ ${scenario} == run_intervals_20Linear_OrchA ] || \
+	[ ${scenario} == run_intervals_20Scramble_OrchA ]; then
 		PREFIX=OrchA
 fi
-if 	[ ${scenario} == run_4DAG_OrchB ] || \
-	[ ${scenario} == run_8DAG_OrchB ] || \
-	[ ${scenario} == run_8DAG_Caching_OrchB ] || \
-	[ ${scenario} == run_20Parallel_OrchB ] || \
-	[ ${scenario} == run_20Sensor_OrchB ] || \
-	[ ${scenario} == run_20Linear_OrchB ] || \
-	[ ${scenario} == run_20Scramble_OrchB ]; then
+if 	[ ${scenario} == run_intervals_4DAG_OrchB ] || \
+	[ ${scenario} == run_intervals_8DAG_OrchB ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_OrchB ] || \
+	[ ${scenario} == run_intervals_20Parallel_OrchB ] || \
+	[ ${scenario} == run_intervals_20Sensor_OrchB ] || \
+	[ ${scenario} == run_intervals_20Linear_OrchB ] || \
+	[ ${scenario} == run_intervals_20Scramble_OrchB ]; then
 		PREFIX=OrchB
 fi
-if 	[ ${scenario} == run_4DAG_nesco ] || \
-	[ ${scenario} == run_8DAG_nesco ] || \
-	[ ${scenario} == run_8DAG_Caching_nesco ] || \
-	[ ${scenario} == run_20Parallel_nesco ] || \
-	[ ${scenario} == run_20Sensor_nesco ] || \
-	[ ${scenario} == run_20Linear_nesco ] || \
-	[ ${scenario} == run_20Scramble_nesco ]; then
+if 	[ ${scenario} == run_intervals_4DAG_nesco ] || \
+	[ ${scenario} == run_intervals_8DAG_nesco ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_nesco ] || \
+	[ ${scenario} == run_intervals_20Parallel_nesco ] || \
+	[ ${scenario} == run_intervals_20Sensor_nesco ] || \
+	[ ${scenario} == run_intervals_20Linear_nesco ] || \
+	[ ${scenario} == run_intervals_20Scramble_nesco ]; then
 		PREFIX=nesco
 fi
-if 	[ ${scenario} == run_4DAG_nescoSCOPT ] || \
-	[ ${scenario} == run_8DAG_nescoSCOPT ] || \
-	[ ${scenario} == run_8DAG_Caching_nescoSCOPT ] || \
-	[ ${scenario} == run_20Parallel_nescoSCOPT ] || \
-	[ ${scenario} == run_20Sensor_nescoSCOPT ] || \
-	[ ${scenario} == run_20Linear_nescoSCOPT ] || \
-	[ ${scenario} == run_20Scramble_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_4DAG_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_8DAG_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_20Parallel_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_20Sensor_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_20Linear_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_20Scramble_nescoSCOPT ]; then
 		PREFIX=nescoSCOPT
 fi
 
 
 # add routes for all the PREFIXes to all nodes
-if 	[ ${scenario} == run_4DAG_OrchA ] || \
-	[ ${scenario} == run_4DAG_OrchB ] || \
-	[ ${scenario} == run_4DAG_nesco ] || \
-	[ ${scenario} == run_4DAG_nescoSCOPT ] || \
-	[ ${scenario} == run_8DAG_OrchA ] || \
-	[ ${scenario} == run_8DAG_OrchB ] || \
-	[ ${scenario} == run_8DAG_nesco ] || \
-	[ ${scenario} == run_8DAG_nescoSCOPT ] || \
-	[ ${scenario} == run_8DAG_Caching_OrchA ] || \
-	[ ${scenario} == run_8DAG_Caching_OrchB ] || \
-	[ ${scenario} == run_8DAG_Caching_nesco ] || \
-	[ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_4DAG_OrchA ] || \
+	[ ${scenario} == run_intervals_4DAG_OrchB ] || \
+	[ ${scenario} == run_intervals_4DAG_nesco ] || \
+	[ ${scenario} == run_intervals_4DAG_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_8DAG_OrchA ] || \
+	[ ${scenario} == run_intervals_8DAG_OrchB ] || \
+	[ ${scenario} == run_intervals_8DAG_nesco ] || \
+	[ ${scenario} == run_intervals_8DAG_nescoSCOPT ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_OrchA ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_OrchB ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_nesco ] || \
+	[ ${scenario} == run_intervals_8DAG_Caching_nescoSCOPT ]; then
 	echo -en "4DAG or 8DAG scenario\r\n"
 	if [ ${device} == consumer ]; then
 		echo -en "Setting up routes for the consumer\r\n"
@@ -306,10 +313,10 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	fi
 fi
 
-if 	[ ${scenario} == run_20Parallel_OrchA ] || \
-	[ ${scenario} == run_20Parallel_OrchB ] || \
-	[ ${scenario} == run_20Parallel_nesco ] || \
-	[ ${scenario} == run_20Parallel_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_20Parallel_OrchA ] || \
+	[ ${scenario} == run_intervals_20Parallel_OrchB ] || \
+	[ ${scenario} == run_intervals_20Parallel_nesco ] || \
+	[ ${scenario} == run_intervals_20Parallel_nescoSCOPT ]; then
 	echo -en "20Parallel scenario\r\n"
 	if [ ${device} == consumer ]; then
 		echo -en "Setting up routes for the consumer\r\n"
@@ -406,10 +413,10 @@ if 	[ ${scenario} == run_20Parallel_OrchA ] || \
 
 fi
 
-if 	[ ${scenario} == run_20Sensor_OrchA ] || \
-	[ ${scenario} == run_20Sensor_OrchB ] || \
-	[ ${scenario} == run_20Sensor_nesco ] || \
-	[ ${scenario} == run_20Sensor_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_20Sensor_OrchA ] || \
+	[ ${scenario} == run_intervals_20Sensor_OrchB ] || \
+	[ ${scenario} == run_intervals_20Sensor_nesco ] || \
+	[ ${scenario} == run_intervals_20Sensor_nescoSCOPT ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
@@ -559,10 +566,10 @@ if 	[ ${scenario} == run_20Sensor_OrchA ] || \
 
 fi
 
-if 	[ ${scenario} == run_20Linear_OrchA ] || \
-	[ ${scenario} == run_20Linear_OrchB ] || \
-	[ ${scenario} == run_20Linear_nesco ] || \
-	[ ${scenario} == run_20Linear_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_20Linear_OrchA ] || \
+	[ ${scenario} == run_intervals_20Linear_OrchB ] || \
+	[ ${scenario} == run_intervals_20Linear_nesco ] || \
+	[ ${scenario} == run_intervals_20Linear_nescoSCOPT ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
@@ -649,10 +656,10 @@ if 	[ ${scenario} == run_20Linear_OrchA ] || \
 	fi
 fi
 
-if 	[ ${scenario} == run_20Scramble_OrchA ] || \
-	[ ${scenario} == run_20Scramble_OrchB ] || \
-	[ ${scenario} == run_20Scramble_nesco ] || \
-	[ ${scenario} == run_20Scramble_nescoSCOPT ]; then
+if 	[ ${scenario} == run_intervals_20Scramble_OrchA ] || \
+	[ ${scenario} == run_intervals_20Scramble_OrchB ] || \
+	[ ${scenario} == run_intervals_20Scramble_nesco ] || \
+	[ ${scenario} == run_intervals_20Scramble_nescoSCOPT ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
 		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
@@ -746,7 +753,7 @@ sleep 1
 
 
 
-if [ ${scenario} == run_4DAG_OrchA ]; then
+if [ ${scenario} == run_intervals_4DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -766,11 +773,11 @@ if [ ${scenario} == run_4DAG_OrchA ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/4dag.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_4DAG_OrchB ]; then
+if [ ${scenario} == run_intervals_4DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
@@ -790,11 +797,11 @@ if [ ${scenario} == run_4DAG_OrchB ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/4dag.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_4DAG_nesco ] || [ ${scenario} == run_4DAG_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_4DAG_nesco ] || [ ${scenario} == run_intervals_4DAG_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		# start producer application
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
@@ -812,11 +819,11 @@ if [ ${scenario} == run_4DAG_nesco ] || [ ${scenario} == run_4DAG_nescoSCOPT ]; 
 	if [ ${device} == consumer ]; then
 		sleep 1
 		# start consumer application (not in the background, so that we see the final print statements)
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/4dag.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/4dag.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_8DAG_OrchA ]; then
+if [ ${scenario} == run_intervals_8DAG_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -837,11 +844,11 @@ if [ ${scenario} == run_8DAG_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_8DAG_OrchB ]; then
+if [ ${scenario} == run_intervals_8DAG_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -862,12 +869,12 @@ if [ ${scenario} == run_8DAG_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 
 fi
 
-if [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_8DAG_nesco ] || [ ${scenario} == run_intervals_8DAG_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -887,11 +894,11 @@ if [ ${scenario} == run_8DAG_nesco ] || [ ${scenario} == run_8DAG_nescoSCOPT ]; 
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
+if [ ${scenario} == run_intervals_8DAG_Caching_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -915,11 +922,11 @@ if [ ${scenario} == run_8DAG_Caching_OrchA ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
+if [ ${scenario} == run_intervals_8DAG_Caching_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
 	fi
@@ -944,11 +951,11 @@ if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 		sleep 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_8DAG_Caching_nesco ] || [ ${scenario} == run_8DAG_Caching_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_8DAG_Caching_nesco ] || [ ${scenario} == run_intervals_8DAG_Caching_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -971,11 +978,11 @@ if [ ${scenario} == run_8DAG_Caching_nesco ] || [ ${scenario} == run_8DAG_Cachin
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 0
 		sleep 1
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/8dag.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Parallel_OrchA ]; then
+if [ ${scenario} == run_intervals_20Parallel_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1010,11 +1017,11 @@ if [ ${scenario} == run_20Parallel_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Parallel_OrchB ]; then
+if [ ${scenario} == run_intervals_20Parallel_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1049,11 +1056,11 @@ if [ ${scenario} == run_20Parallel_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Parallel_nesco ] || [ ${scenario} == run_20Parallel_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_20Parallel_nesco ] || [ ${scenario} == run_intervals_20Parallel_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1087,11 +1094,11 @@ if [ ${scenario} == run_20Parallel_nesco ] || [ ${scenario} == run_20Parallel_ne
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-parallel.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Sensor_OrchA ]; then
+if [ ${scenario} == run_intervals_20Sensor_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
@@ -1145,11 +1152,11 @@ if [ ${scenario} == run_20Sensor_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Sensor_OrchB ]; then
+if [ ${scenario} == run_intervals_20Sensor_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
@@ -1203,11 +1210,11 @@ if [ ${scenario} == run_20Sensor_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Sensor_nesco ] || [ ${scenario} == run_20Sensor_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_20Sensor_nesco ] || [ ${scenario} == run_intervals_20Sensor_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
@@ -1260,11 +1267,11 @@ if [ ${scenario} == run_20Sensor_nesco ] || [ ${scenario} == run_20Sensor_nescoS
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-sensor.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Linear_OrchA ]; then
+if [ ${scenario} == run_intervals_20Linear_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1297,11 +1304,11 @@ if [ ${scenario} == run_20Linear_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 1 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Linear_OrchB ]; then
+if [ ${scenario} == run_intervals_20Linear_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1334,11 +1341,11 @@ if [ ${scenario} == run_20Linear_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_20Linear_nesco ] || [ ${scenario} == run_intervals_20Linear_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1370,11 +1377,11 @@ if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoS
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Scramble_OrchA ]; then
+if [ ${scenario} == run_intervals_20Scramble_OrchA ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1407,11 +1414,11 @@ if [ ${scenario} == run_20Scramble_OrchA ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 1 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Scramble_OrchB ]; then
+if [ ${scenario} == run_intervals_20Scramble_OrchB ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1444,11 +1451,11 @@ if [ ${scenario} == run_20Scramble_OrchB ]; then
 	if [ ${device} == consumer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 2 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 2 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
-if [ ${scenario} == run_20Scramble_nesco ] || [ ${scenario} == run_20Scramble_nescoSCOPT ]; then
+if [ ${scenario} == run_intervals_20Scramble_nesco ] || [ ${scenario} == run_intervals_20Scramble_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
@@ -1480,7 +1487,7 @@ if [ ${scenario} == run_20Scramble_nesco ] || [ ${scenario} == run_20Scramble_ne
 	fi
 	if [ ${device} == consumer ]; then
 		sleep 1
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 0 |& tee ${consumerLog}
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer-poisson /${PREFIX} ${WORKFLOW_DIR}/20-linear.json 0 ${poissonRate} ${poissonTotal} |& tee ${consumerLog}
 	fi
 fi
 
