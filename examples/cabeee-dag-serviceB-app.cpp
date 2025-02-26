@@ -463,6 +463,14 @@ private:
               (m_vectorOfServiceInputs[18])+
               (m_vectorOfServiceInputs[19]);
       }
+      if ((m_service.ndn::Name::toUri() == "/serviceP22") ||
+          (m_service.ndn::Name::toUri() == "/serviceP23") ||
+          (m_service.ndn::Name::toUri() == "/serviceR1")){
+        m_serviceOutput =
+            (m_vectorOfServiceInputs[0])+
+            (m_vectorOfServiceInputs[1])+
+            (m_vectorOfServiceInputs[2]);
+      }
       
       // we stored the result so we can respond later when the main service interest comes in!!
 
