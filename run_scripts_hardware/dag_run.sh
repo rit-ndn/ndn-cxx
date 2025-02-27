@@ -144,7 +144,7 @@ set -e
 changeLinkDelay=0
 linkDelayMS=0.9
 
-numSamples=1
+numSamples=20
 
 NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts_hardware"
@@ -153,30 +153,30 @@ TOPOLOGY_DIR="$RUN_DIR/topologies"
 
 declare -a scenarios=(
 # 4 DAG
-#"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-#"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
 # 8 DAG
-#"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 8 DAG w/ caching
-#"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-#"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 # 20 Sensor (using 3node topology)
-#"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
-#"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Reuse (using 3node topology)
 "run_20Reuse_OrchA orchA 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
 "run_20Reuse_OrchB orchB 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
