@@ -202,6 +202,7 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	[ ${scenario} == run_20Parallel_OrchA ] || \
 	[ ${scenario} == run_20Sensor_OrchA ] || \
 	[ ${scenario} == run_20Linear_OrchA ] || \
+	[ ${scenario} == run_20Reuse_OrchA ] || \
 	[ ${scenario} == run_20Scramble_OrchA ]; then
 		PREFIX=OrchA
 fi
@@ -211,6 +212,7 @@ if 	[ ${scenario} == run_4DAG_OrchB ] || \
 	[ ${scenario} == run_20Parallel_OrchB ] || \
 	[ ${scenario} == run_20Sensor_OrchB ] || \
 	[ ${scenario} == run_20Linear_OrchB ] || \
+	[ ${scenario} == run_20Reuse_OrchB ] || \
 	[ ${scenario} == run_20Scramble_OrchB ]; then
 		PREFIX=OrchB
 fi
@@ -220,6 +222,7 @@ if 	[ ${scenario} == run_4DAG_nesco ] || \
 	[ ${scenario} == run_20Parallel_nesco ] || \
 	[ ${scenario} == run_20Sensor_nesco ] || \
 	[ ${scenario} == run_20Linear_nesco ] || \
+	[ ${scenario} == run_20Reuse_nesco ] || \
 	[ ${scenario} == run_20Scramble_nesco ]; then
 		PREFIX=nesco
 fi
@@ -229,6 +232,7 @@ if 	[ ${scenario} == run_4DAG_nescoSCOPT ] || \
 	[ ${scenario} == run_20Parallel_nescoSCOPT ] || \
 	[ ${scenario} == run_20Sensor_nescoSCOPT ] || \
 	[ ${scenario} == run_20Linear_nescoSCOPT ] || \
+	[ ${scenario} == run_20Reuse_nescoSCOPT ] || \
 	[ ${scenario} == run_20Scramble_nescoSCOPT ]; then
 		PREFIX=nescoSCOPT
 fi
@@ -569,7 +573,7 @@ if 	[ ${scenario} == run_20Linear_OrchA ] || \
 	fi
 	if [ ${device} == rtr3 ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr2MAC}]
@@ -589,7 +593,7 @@ if 	[ ${scenario} == run_20Linear_OrchA ] || \
 	fi
 	if [ ${device} == rtr2 ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr3MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL8 ether://[${rtr3MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL12 ether://[${rtr3MAC}]
@@ -605,7 +609,7 @@ if 	[ ${scenario} == run_20Linear_OrchA ] || \
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${producerMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr2MAC}]
@@ -649,6 +653,119 @@ if 	[ ${scenario} == run_20Linear_OrchA ] || \
 	fi
 fi
 
+if 	[ ${scenario} == run_20Reuse_OrchA ] || \
+	[ ${scenario} == run_20Reuse_OrchB ] || \
+	[ ${scenario} == run_20Reuse_nesco ] || \
+	[ ${scenario} == run_20Reuse_nescoSCOPT ]; then
+	if [ ${device} == consumer ]; then
+		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
+	fi
+	if [ ${device} == rtr3 ]; then
+		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL7 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL9 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL6 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL10 ether://[${rtr2MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor1 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor2 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor3 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor4 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor5 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor6 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP2 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP3 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP4 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP5 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP6 ether://[${rtr2MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
+	fi
+	if [ ${device} == rtr2 ]; then
+		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr3MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL8 ether://[${rtr3MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL6 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL10 ether://[${rtr1MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor1 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor2 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor3 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor4 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor5 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor6 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP22 ether://[${rtr3MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP23 ether://[${rtr3MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceR1 ether://[${rtr3MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr3MAC}]
+
+	fi
+	if [ ${device} == rtr1 ]; then
+		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL7 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL9 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL8 ether://[${rtr2MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor1 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor2 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor3 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor4 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor5 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor6 ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP2 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP3 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP4 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP5 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP6 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP22 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP23 ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceR1 ether://[${rtr2MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr2MAC}]
+	fi
+	if [ ${device} == producer ]; then
+		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${producerMAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL6 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL7 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL8 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL9 ether://[${rtr1MAC}]
+		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL10 ether://[${rtr1MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP1 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP2 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP3 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP4 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP5 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP6 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP22 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceP23 ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceR1 ether://[${rtr1MAC}]
+
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${rtr1MAC}]
+	fi
+fi
+
 if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 	[ ${scenario} == run_20Scramble_OrchB ] || \
 	[ ${scenario} == run_20Scramble_nesco ] || \
@@ -659,7 +776,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 	fi
 	if [ ${device} == rtr3 ]; then
 		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr2MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr2MAC}]
@@ -678,7 +795,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 	fi
 	if [ ${device} == rtr2 ]; then
 		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr2MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${rtr1MAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL1 ether://[${rtr1MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr3MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL4 ether://[${rtr1MAC}]
@@ -698,7 +815,7 @@ if 	[ ${scenario} == run_20Scramble_OrchA ] || \
 	fi
 	if [ ${device} == rtr1 ]; then
 		#sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr1MAC}]
-		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensor ether://[${producerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/sensorL ether://[${producerMAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL2 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL3 ether://[${rtr2MAC}]
 		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceL5 ether://[${rtr2MAC}]
@@ -1266,7 +1383,7 @@ fi
 
 if [ ${scenario} == run_20Linear_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL2 &
@@ -1303,7 +1420,7 @@ fi
 
 if [ ${scenario} == run_20Linear_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL2 &
@@ -1340,7 +1457,7 @@ fi
 
 if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL2 &
@@ -1374,9 +1491,143 @@ if [ ${scenario} == run_20Linear_nesco ] || [ ${scenario} == run_20Linear_nescoS
 	fi
 fi
 
+if [ ${scenario} == run_20Reuse_OrchA ]; then
+	if [ ${device} == producer ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+	fi
+	if [ ${device} == rtr1 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL6 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL10 &
+	fi
+	if [ ${device} == rtr2 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL7 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL9 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP6 &
+	fi
+	if [ ${device} == rtr3 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL8 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP22 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceP23 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceR1 &
+	fi
+	if [ ${device} == consumer ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-app /${PREFIX} /serviceOrchestration &
+		sleep 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-reuse.json 1 |& tee ${consumerLog}
+	fi
+fi
+
+if [ ${scenario} == run_20Reuse_OrchB ]; then
+	if [ ${device} == producer ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+	fi
+	if [ ${device} == rtr1 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL6 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL10 &
+	fi
+	if [ ${device} == rtr2 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL7 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL9 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP6 &
+	fi
+	if [ ${device} == rtr3 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL8 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP22 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceP23 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceR1 &
+	fi
+	if [ ${device} == consumer ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
+		sleep 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-reuse.json 2 |& tee ${consumerLog}
+	fi
+fi
+
+if [ ${scenario} == run_20Reuse_nesco ] || [ ${scenario} == run_20Reuse_nescoSCOPT ]; then
+	if [ ${device} == producer ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor1 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor2 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor3 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor4 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor5 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor6 9000 0 100 1000 &
+	fi
+	if [ ${device} == rtr1 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL6 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL10 &
+	fi
+	if [ ${device} == rtr2 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL7 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL9 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP1 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP2 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP3 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP5 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP6 &
+	fi
+	if [ ${device} == rtr3 ]; then
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL4 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL8 &
+
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP22 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceP23 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceR1 &
+	fi
+	if [ ${device} == consumer ]; then
+		sleep 1
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/20-reuse.json 0 |& tee ${consumerLog}
+	fi
+fi
+
 if [ ${scenario} == run_20Scramble_OrchA ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceA-app /${PREFIX} /serviceL1 &
@@ -1413,7 +1664,7 @@ fi
 
 if [ ${scenario} == run_20Scramble_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /serviceL1 &
@@ -1450,7 +1701,7 @@ fi
 
 if [ ${scenario} == run_20Scramble_nesco ] || [ ${scenario} == run_20Scramble_nescoSCOPT ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensorL 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-forwarder-app /${PREFIX} /serviceL1 &
