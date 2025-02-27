@@ -255,7 +255,7 @@ if 	[ ${scenario} == run_4DAG_OrchA ] || \
 	if [ ${device} == consumer ]; then
 		echo -en "Setting up routes for the consumer\r\n"
 		sleep ${sleepVal}; nfdc route add /${PREFIX} ether://[${rtr3MAC}]
-		#sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
+		sleep ${sleepVal}; nfdc route add /${PREFIX}/serviceOrchestration ether://[${consumerMAC}]
 	fi
 	
 	if [ ${device} == rtr3 ]; then
@@ -1038,7 +1038,7 @@ fi
 
 if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 	if [ ${device} == producer ]; then
-		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor &
+		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-producer /${PREFIX} /sensor 9000 0 100 1000 &
 	fi
 	if [ ${device} == rtr1 ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-serviceB-app /${PREFIX} /service2 &
@@ -1058,7 +1058,7 @@ if [ ${scenario} == run_8DAG_Caching_OrchB ]; then
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorB-app /${PREFIX} /serviceOrchestration &
 		sleep 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer2 /${PREFIX} ${WORKFLOW_DIR}/4dag-caching.json 2
-		sleep 1
+		sleep 2
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-dag-orchestratorA-reset-app /${PREFIX} /serviceOrchestration/reset &
 		sleep 1
 		sleep ${sleepVal}; ~/ndn/ndn-cxx/build/examples/cabeee-custom-app-consumer /${PREFIX} ${WORKFLOW_DIR}/8dag.json 2 |& tee ${consumerLog}
