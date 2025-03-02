@@ -167,11 +167,6 @@ declare -a scenarios=(
 "run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
 "run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-# 20 Parallel (using 3node topology)
-"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 # 20 Sensor (using 3node topology)
 "run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 "run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
@@ -182,11 +177,26 @@ declare -a scenarios=(
 "run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 "run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 "run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+# 20 Reuse (using 3node topology)
+"run_20Reuse_OrchA orchA 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
+"run_20Reuse_OrchB orchB 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
+"run_20Reuse_nesco nesco 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
+"run_20Reuse_nescoSCOPT nescoSCOPT 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
+
+
+
+
+
 # 20 Scramble (using 3node topology)
-"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-"run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+# 20 Parallel (using 3node topology)
+#"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
 )
 
 consumerLog="$RUN_DIR/cabeee_consumer.log"
