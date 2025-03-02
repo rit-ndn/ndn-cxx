@@ -155,33 +155,35 @@ TOPOLOGY_DIR="$RUN_DIR/topologies"
 
 declare -a scenarios=(
 	# 20 Sensor (using 3node topology)
-	#"run_intervals_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-	#"run_intervals_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-	#"run_intervals_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
 # 20 Linear (using 3node topology)
-	#"run_intervals_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-	#"run_intervals_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-	#"run_intervals_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
 # 20 Scramble (using 3node topology)
-	#"run_intervals_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 ####"run_intervals_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 	"run_intervals_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-	#"run_intervals_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+	"run_intervals_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
 )
 
 consumerLog="$RUN_DIR/cabeee_consumer.log"
 csv_out="$RUN_DIR/perf-results-hardware_intervals.csv"
-header="Example, Service Latency, CPM, CPM-t_exec, Min Service Latency(s), Low Quartile Service Latency(s), Mid Quartile Service Latency(s), High Quartile Service Latency(s), Max Service Latency(s), Total Service Latency(s), Avg Service Latency(s), Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
+header="Example, Min Service Latency(s), Low Quartile Service Latency(s), Mid Quartile Service Latency(s), High Quartile Service Latency(s), Max Service Latency(s), Total Service Latency(s), Avg Service Latency(s), Requests Fulfilled, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
 
 if [ ! -f "$csv_out" ]; then
+	echo "Creating csv..."
 	echo "$header" > "$csv_out"
 elif ! grep -q -F "$header" "$csv_out"; then
-	mv "$csv_out" "$csv_out.bak"
 	echo -en "Overwriting csv...\r\n"
+	mv "$csv_out" "$csv_out.bak"
 	echo "$header" > "$csv_out"
 else
+	echo "Updating csv..."
 	cp "$csv_out" "$csv_out.bak"
 fi
 
@@ -226,24 +228,20 @@ do
 		sleep 20
 		cmd="$HOME/ndn/ndn-cxx/run_scripts_hardware/dag_run_local_intervals.sh consumer ${scenario} ${sleep} ${changeLinkDelay} ${linkDelayMS} ${consumerLog} ${poissonRate} ${poissonTotal}"
 
-		consumer_parse=$( \
-			${cmd} |& tee /dev/tty | sed -n \
-			-e 's/^\s*The final answer is: \([0-9]*\)$/\1,/p' \
-			| tr -d '\n' \
-		)
-
-		result="$(echo "$consumer_parse" | cut -d',' -f1)"
+		${cmd} |& tee /dev/tty
 
 
 		latencies=$( \
-			python3 process_nfd_logs_intervals.py | sed -n \
-			-e 's/^\s*min latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*low latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*mid latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*high latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*max latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*total latency: \([0-9\.]*\) seconds$/\1,/p' \
-			-e 's/^\s*avg latency: \([0-9\.]*\) seconds$/\1,/p' \
+			python3 process_nfd_logs_intervals.py "$consumerLog" | sed -n \
+			-e 's/^\s*consumer min latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer low latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer mid latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer high latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer max latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer total latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer avg latency: \([0-9\.]*\) seconds$/\1,/p' \
+			-e 's/^\s*consumer requests fulfilled: \([0-9\.]*\) total requests$/\1,/p' \
+			-e 's/^\s*consumer Final answer: \([0-9\.]*\) numerical$/\1,/p' \
 			| tr -d '\n' \
 		)
 		min_latency="$(echo "$latencies" | cut -d',' -f1)"
@@ -253,18 +251,10 @@ do
 		max_latency="$(echo "$latencies" | cut -d',' -f5)"
 		total_latency="$(echo "$latencies" | cut -d',' -f6)"
 		avg_latency="$(echo "$latencies" | cut -d',' -f7)"
+		requests_fulfilled="$(echo "$latencies" | cut -d',' -f8)"
+		final_answer="$(echo "$latencies" | cut -d',' -f9)"
 
 
-		cpm=$( \
-			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
-			-e 's/^metric is \([0-9]*\)/\1/p' \
-			| tr -d '\n' \
-		)
-		cpm_t=$( \
-			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
-			-e 's/^time is \([0-9]*\)/\1/p' \
-			| tr -d '\n' \
-		)
 
 		#sleep 0.1
 		#ssh ${username}@${producerWiFiIP} "nfd-stop"
@@ -273,7 +263,7 @@ do
 		#ssh ${username}@${rpi5rtr3WiFiIP}     "nfd-stop"
 		#nfd-stop
 
-		row="$scenario, $latency, $cpm, $cpm_t, $min_latency, $low_latency, $mid_latency, $high_latency, $max_latency, $total_latency, $avg_latency, $result, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
+		row="$scenario, $min_latency, $low_latency, $mid_latency, $high_latency, $max_latency, $total_latency, $avg_latency, $requests_fulfilled, $final_answer, $now, $ndncxx_hash, $nfd_hash, $nlsr_hash"
 
 		echo -en "   Dumping to csv...\r\n"
 		# replace existing line
