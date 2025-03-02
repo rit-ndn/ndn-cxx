@@ -204,13 +204,18 @@ csv_out="$RUN_DIR/perf-results-hardware.csv"
 header="Example, Service Latency, CPM, CPM-t_exec, Final Result, Time, ndn-cxx commit, NFD commit, NLSR commit"
 
 if [ ! -f "$csv_out" ]; then
+	echo -en "Creating csv...\r\n"
 	echo "$header" > "$csv_out"
 elif ! grep -q -F "$header" "$csv_out"; then
-	mv "$csv_out" "$csv_out.bak"
 	echo -en "Overwriting csv...\r\n"
+	mv "$csv_out" "$csv_out.bak"
 	echo "$header" > "$csv_out"
 else
-	cp "$csv_out" "$csv_out.bak"
+	#echo -en "Updating csv...\r\n"
+	#cp "$csv_out" "$csv_out.bak"
+	echo -en "Overwriting csv...\r\n"
+	mv "$csv_out" "$csv_out.bak"
+	echo "$header" > "$csv_out"
 fi
 
 for iterator in "${scenarios[@]}"
