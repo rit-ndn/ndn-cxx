@@ -56,9 +56,10 @@ public:
   //}
 
   void
-  run(char* PREFIX, char* workflowFile, char* orchestrationType, char* interestFrequency, char* numInterests)
+  run(char* PREFIX, char* serviceName, char* workflowFile, char* orchestrationType, char* interestFrequency, char* numInterests)
   {
     m_PREFIX = PREFIX;
+    m_service = serviceName;
     m_dagPath = workflowFile;
     m_orchestrate = atoi(orchestrationType);
     m_interestFrequency = atoi(interestFrequency);
@@ -68,7 +69,7 @@ public:
 
     std::cout << "Consumer (Poisson Process) starting to send interests!" << std::endl;
     //sendInterest();
-    for (m_interestNum = 1; m_interestNum < m_numInterests; m_interestNum++)
+    for (m_interestNum = 1; m_interestNum <= m_numInterests; m_interestNum++)
     {
       //int randomWait_ms = 1000/m_interestFrequency;
       double const exp_dist_mean = 1000.0 / m_interestFrequency;
@@ -150,7 +151,7 @@ private:
           {
             //std::cout << "Checking y.key: " << (std::string)y.key() << '\n';
             //if (y.key() == m_name.ndn::Name::toUri())
-            if (y.key() == "/consumer")
+            if (y.key() == m_service)
             {
               dagObject["dag"].erase(x.key());
               consumerFound = true;
@@ -248,7 +249,7 @@ private:
     pContent++;  // now this points to the first size octet
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
-    std::cout << "\n  The final answer is: " <<  (int)(*pContent) << std::endl << "\n\n";
+    std::cout << "  Final answer for    " << m_service << " " << m_interestNum << "/" << m_numInterests << ": " <<  (int)(*pContent)  << std::endl;
  
     m_waitingForData = 0; 
 
@@ -265,7 +266,7 @@ private:
     endTime = std::chrono::steady_clock::now();
     std::chrono::steady_clock::duration serviceLatency = endTime - startTime;
     double nSeconds = double(serviceLatency.count()) * std::chrono::steady_clock::period::num / std::chrono::steady_clock::period::den;
-    std::cout << "Service Latency " << m_interestNum << "/" << m_numInterests << ": " <<  nSeconds << " seconds." << std::endl;
+  std::cout << "  Service Latency for " << m_service << " " << m_interestNum << "/" << m_numInterests << ": " <<  nSeconds << " seconds." << std::endl;
   }
 
   void
@@ -286,6 +287,7 @@ private:
   //Face m_face{m_ioCtx};
   Face m_face;
   //ValidatorConfig m_validator{m_face};
+  std::string m_service;
   uint16_t m_orchestrate;
   std::string m_dagPath;
   std::chrono::steady_clock::time_point startTime;
@@ -306,7 +308,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Consumer consumer;
-    consumer.run(argv[1], argv[2], argv[3], argv[4], argv[5]);
+    consumer.run(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]);
     return 0;
   }
   catch (const std::exception& e) {
