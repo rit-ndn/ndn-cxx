@@ -54,13 +54,7 @@ public:
   {
 
 
-    //TODO: we need to be able to probe the CS in NFD to see what's being cached.
-    //      do it every "updateSeconds" number of seconds
-    //      based on what is cached, add interest filters (or remove them if cached contents have been evicted)
-    //      AS OF 3/31/2025, this doesn't seem possible from ndn-cxx: https://redmine.named-data.net/projects/nfd/wiki/CsMgmt
-
-
-    // update 4/2/2025: listen to /PREFIX/csUpdate interest message from NFD. When received, set the interest filter to the name of the cached content (name comes in application parameter).
+    // listen to /PREFIX/csUpdate interest message from NFD. When received, set the interest filter to the name of the cached content (name comes in application parameter).
 
     m_PREFIX = PREFIX;
     std::string fullPrefix(PREFIX);
@@ -91,21 +85,27 @@ private:
     // decode the CS content name string contained in the application parameters, so we can register the name in RIB/FIB
     //extract custom parameter from interest packet
 
-    std::cout << "CsUpdater InterestName: " << interest.getName() << '\n';
+    std::cout << "CsUpdater received interest with name: " << interest.getName() << '\n';
 
 
+    if(interest.getName().getPrefix(2).toUri() == "/nesco/csUpdate")
+    {
 
-    auto csParameterFromInterest = interest.getApplicationParameters();
-    std::string csContentName = std::string(reinterpret_cast<const char*>(csParameterFromInterest.value()), csParameterFromInterest.value_size());
+      auto csParameterFromInterest = interest.getApplicationParameters();
+      std::string csContentName = std::string(reinterpret_cast<const char*>(csParameterFromInterest.value()), csParameterFromInterest.value_size());
 
-    std::cout << "CsUpdater cached content name: " << csContentName << '\n';
+      std::cout << "CsUpdater setting interest filter for cached content name: " << csContentName << '\n';
 
-    m_face.setInterestFilter(csContentName,
-                             std::bind(&CsUpdater::onInterest, this, _2),
-                             nullptr, // RegisterPrefixSuccessCallback is optional
-                             std::bind(&CsUpdater::onRegisterFailed, this, _1, _2));
+      m_face.setInterestFilter(csContentName,
+                              std::bind(&CsUpdater::onInterest, this, _2),
+                              nullptr, // RegisterPrefixSuccessCallback is optional
+                              std::bind(&CsUpdater::onRegisterFailed, this, _1, _2));
 
 
+      std::cout << "CsUpdater face processing events..." << '\n';
+      // we need to prevent this from blocking!
+      m_face.processEvents(ndn::time::milliseconds(-1)); // If a negative timeout is specified, then processEvents will not block and will process only pending events.
+    }
 
   }
 
@@ -115,7 +115,7 @@ private:
   void
   onData(const Interest&, const Data& data)
   {
-    std::cout << "csUPdater application received data (it's not supposed to)." << std::endl;
+    std::cout << "csUpdater application received data (it's not supposed to)." << std::endl;
   }
 
   void
