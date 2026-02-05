@@ -297,6 +297,10 @@ private:
     // generate interests for inputs into hosted services early (shortcut optimization to parallelize workflow)
     if (rxedInterestName == "/shortcutOPT")
     {
+      if (m_dagObject.empty())  // if we received a shortcutOPT interest before the very first regular interest, the data structure won't exist. We simply create it with the received pDAG.
+      {
+        m_dagObject = json::parse(dagString);
+      }
       if (m_service.toUri() != dagObject["head"])
       {
         // only if we haven't already received a request for the service
