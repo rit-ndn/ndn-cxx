@@ -150,53 +150,54 @@ NDN_DIR="$HOME/ndn"
 RUN_DIR="$NDN_DIR/ndn-cxx/run_scripts_hardware"
 WORKFLOW_DIR="$RUN_DIR/workflows"
 TOPOLOGY_DIR="$RUN_DIR/topologies"
+CPM_DIR="$NDN_DIR/CPM"
 
 declare -a scenarios=(
 # 4 DAG
-"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.txt"
-"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.txt"
+"run_4DAG_OrchA orchA 4dag.json 4dag.hosting topo-cabeee-3node.json"
+"run_4DAG_OrchB orchB 4dag.json 4dag.hosting topo-cabeee-3node.json"
+"run_4DAG_nesco nesco 4dag.json 4dag.hosting topo-cabeee-3node.json"
+"run_4DAG_nescoSCOPT nescoSCOPT 4dag.json 4dag.hosting topo-cabeee-3node.json"
 # 8 DAG
-"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.json"
 # 8 DAG w/ caching
-"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.txt"
-"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.txt"
+"run_8DAG_Caching_OrchA orchA 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_Caching_OrchB orchB 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_Caching_nesco nesco 8dag.json 8dag.hosting topo-cabeee-3node.json"
+"run_8DAG_Caching_nescoSCOPT nescoSCOPT 8dag.json 8dag.hosting topo-cabeee-3node.json"
 # 20 Sensor (using 3node topology)
-"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
-"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.txt"
+"run_20Sensor_OrchA orchA 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.json"
+"run_20Sensor_OrchB orchB 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.json"
+"run_20Sensor_nesco nesco 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.json"
+"run_20Sensor_nescoSCOPT nescoSCOPT 20-sensor.json 20-sensor-in3node.hosting topo-cabeee-3node.json"
 # 20 Linear (using 3node topology)
-"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
-"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.txt"
+"run_20Linear_OrchA orchA 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.json"
+"run_20Linear_OrchB orchB 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.json"
+"run_20Linear_nesco nesco 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.json"
+"run_20Linear_nescoSCOPT nescoSCOPT 20-linear.json 20-linear-in3node.hosting topo-cabeee-3node.json"
 # 20 Reuse (using 3node topology)
-"run_20Reuse_OrchA orchA 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
-"run_20Reuse_OrchB orchB 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
-"run_20Reuse_nesco nesco 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
-"run_20Reuse_nescoSCOPT nescoSCOPT 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.txt"
+"run_20Reuse_OrchA orchA 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.json"
+"run_20Reuse_OrchB orchB 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.json"
+"run_20Reuse_nesco nesco 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.json"
+"run_20Reuse_nescoSCOPT nescoSCOPT 20-reuse.json 20-reuse-in3node.hosting topo-cabeee-3node.json"
 
 
 
 
 
 # 20 Scramble (using 3node topology)
-#"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Scramble_OrchA orchA 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.json"
+#"run_20Scramble_OrchB orchB 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.json"
+#"run_20Scramble_nesco nesco 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.json"
+#"run_20Scramble_nescoSCOPT nescoSCOPT 20-linear.json 20-scramble-in3node.hosting topo-cabeee-3node.json"
 # 20 Parallel (using 3node topology)
-#"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
-#"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.txt"
+#"run_20Parallel_OrchA orchA 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.json"
+#"run_20Parallel_OrchB orchB 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.json"
+#"run_20Parallel_nesco nesco 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.json"
+#"run_20Parallel_nescoSCOPT nescoSCOPT 20-parallel.json 20-parallel-in3node.hosting topo-cabeee-3node.json"
 )
 
 consumerLog="$RUN_DIR/cabeee_consumer.log"
@@ -277,16 +278,32 @@ do
 		result="$(echo "$consumer_parse" | cut -d',' -f1)"
 		latency="$(echo "$consumer_parse" | cut -d',' -f2)"
 
-		cpm=$( \
-			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
-			-e 's/^metric is \([0-9]*\)/\1/p' \
-			| tr -d '\n' \
-		)
-		cpm_t=$( \
-			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
-			-e 's/^time is \([0-9]*\)/\1/p' \
-			| tr -d '\n' \
-		)
+#		cpm=$( \
+#			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
+#			-e 's/^metric is \([0-9]*\)/\1/p' \
+#			| tr -d '\n' \
+#		)
+#		cpm_t=$( \
+#			python3 critical-path-metric.py -type ${type} -workflow ${wf} -hosting ${hosting} -topology ${topo} | sed -n \
+#			-e 's/^time is \([0-9]*\)/\1/p' \
+#			| tr -d '\n' \
+#		)
+
+
+        # Attempt to run cpm and capture output. 
+		# The "|| true" ensures the script doesn't exit on failure.
+		cpm_output=$(${CPM_DIR}/cpm --scheme ${type} --workflow ${wf} --hosting ${hosting} --topology ${topo} 2>/dev/null || echo "")
+
+		if [ -n "$cpm_output" ]; then
+			cpm=$(echo "$cpm_output" | sed -n -e 's/^metric: \([0-9]*\)/\1/p' | tr -d '\n')
+			cpm_t=$(echo "$cpm_output" | sed -n -e 's/^time: \([0-9]*\) ns/\1/p' | tr -d '\n')
+		else
+			# If cpm failed, we set them to empty strings
+			echo "   Warning: cpm failed for this iteration. Skipping columns."
+			cpm=""
+			cpm_t=""
+		fi
+
 
 		#sleep 0.1
 		#ssh ${username}@${producerWiFiIP} "nfd-stop"
