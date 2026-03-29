@@ -264,9 +264,26 @@ private:
       //}
     }
 
+    for (auto sinkNode : m_listOfSinkNodes)
+    {
+      //std::cout << "OrchestratorA looking at sink node: " << sinkNode << '\n';
+      // if it feeds the sink node, it's the last service (sink node is the consumer)
+      for (auto& x : m_dagObject["dag"].items())
+      {
+        //std::cout << "OrchestratorA looking at x: " << x.key() << '\n';
+        for (auto& y : m_dagObject["dag"][x.key()].items())
+        {
+          //std::cout << "OrchestratorA looking at y: " << y.key() << '\n';
+          if (sinkNode == y.key())
+          {
+            m_wf2OrchestratorMap[x.key()] = interest.getName();  // store the interest name with digest as the key and the rootService as the value, so that we can later get the final result data packet, we can respond to it using the same name/digest!
+            //std::cout << "OrchestratorA adding to map: " << x.key() << ", " << interest.getName() << '\n';
+          }
+        }
+      }
+    }
 
-
-    m_nameAndDigest = interest.getName();  // store the name with digest so that we can later generate the final result data packet with the same name/digest!
+    //m_nameAndDigest = interest.getName();  // store the name with digest so that we can later generate the final result data packet with the same name/digest!
 
   }
 
@@ -368,47 +385,75 @@ private:
       {
         if (sinkNode == serviceFeed.key())
         {
+          // figure out which element of the m_nameAndDigest list/vector we just received a data packet for.
           //std::cout << "Final data packet! Creating data for name: " << m_nameAndDigest << std::endl;   // m_name doesn't have the sha256 digest, so it doesn't match the original interest!
                                                                                             // We use m_nameAndDigest to store the old name with the digest.
 
-          // Create new Data packet
-          auto new_data = std::make_shared<Data>();
-          new_data->setName(m_nameAndDigest);
-          //new_data->setFreshnessPeriod(9_s);
-          new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
-          new_data->setContent(data.getContent());
+          // Get the name from the incoming data packet
+          ndn::Name incomingName = data.getName();
+          //std::string incomingNameStr = incomingName.toUri();
+          std::string incomingNameStr = incomingName.getPrefix(-1).getSubName(1).toUri();
+          // Find the element that matches the incoming name
+          //auto it = std::find_if(m_nameAndDigestVector.begin(), m_nameAndDigestVector.end(), [&incomingName](const ndn::Name& storedName) {
+          //        // ndn::Name::isPrefixOf or == depending on how specific your match needs to be
+          //        return incomingName.isPrefixOf(storedName); 
+          //    });
+
+          //std::cout << "OrchestratorA received final data packet: " << incomingName << '\n';
+          //std::cout << "--- Current m_wf2OrchestratorMap contents (Size: " << m_wf2OrchestratorMap.size() << ") ---" << "\n";
+          //for (const auto& entry : m_wf2OrchestratorMap) {
+            //std::cout << "Stored: " << entry.first << ", " << entry.second << "\n";
+          //}
+          //auto it = std::find(m_nameAndDigestVector.begin(), m_nameAndDigestVector.end(), incomingName);
+          auto it = m_wf2OrchestratorMap.find(incomingNameStr);
+          if (it != m_wf2OrchestratorMap.end()) {
+            ndn::Name originalOrchName = it->second;
+            //std::cout << "    OrchestratorA final data packet matches: " << incomingName << '\n';
+    
+            // Create new Data packet
+            auto new_data = std::make_shared<ndn::Data>(originalOrchName);
+
+            // Remove the name from the Vector now that it has been processed
+            m_wf2OrchestratorMap.erase(it);
+
+            //auto new_data = std::make_shared<Data>();
+            //new_data->setName(m_nameAndDigest);
+            //new_data->setFreshnessPeriod(9_s);
+            new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
+            new_data->setContent(data.getContent());
 
 
-          // In order for the consumer application to be able to validate the packet, you need to setup
-          // the following keys:
-          // 1. Generate example trust anchor
-          //
-          //         ndnsec key-gen /example
-          //         ndnsec cert-dump -i /example > example-trust-anchor.cert
-          //
-          // 2. Create a key for the producer and sign it with the example trust anchor
-          //
-          //         ndnsec key-gen /example/testApp
-          //         ndnsec sign-req /example/testApp | ndnsec cert-gen -s /example -i example | ndnsec cert-install -
+            // In order for the consumer application to be able to validate the packet, you need to setup
+            // the following keys:
+            // 1. Generate example trust anchor
+            //
+            //         ndnsec key-gen /example
+            //         ndnsec cert-dump -i /example > example-trust-anchor.cert
+            //
+            // 2. Create a key for the producer and sign it with the example trust anchor
+            //
+            //         ndnsec key-gen /example/testApp
+            //         ndnsec sign-req /example/testApp | ndnsec cert-gen -s /example -i example | ndnsec cert-install -
 
-          // Sign Data packet with default identity
-          //m_keyChain.sign(*new_data);
-          // m_keyChain.sign(*new_data, signingByIdentity(<identityName>));
-          // m_keyChain.sign(*new_data, signingByKey(<keyName>));
-          // m_keyChain.sign(*new_data, signingByCertificate(<certName>));
-          m_keyChain.sign(*new_data, signingWithSha256());
+            // Sign Data packet with default identity
+            //m_keyChain.sign(*new_data);
+            // m_keyChain.sign(*new_data, signingByIdentity(<identityName>));
+            // m_keyChain.sign(*new_data, signingByKey(<keyName>));
+            // m_keyChain.sign(*new_data, signingByCertificate(<certName>));
+            m_keyChain.sign(*new_data, signingWithSha256());
 
-          // Return Data packet to the requester
-          //std::cout << "<< D: " << *new_data << std::endl;
-          m_face.put(*new_data);
+            // Return Data packet to the requester
+            //std::cout << "<< D: " << *new_data << std::endl;
+            m_face.put(*new_data);
 
-          // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
-          // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
-          m_dagOrchTracker.clear();
-          m_listOfServicesWithInputs.clear();
-          m_listOfRootServices.clear();
-          m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
-          //m_listOfSinkNodes.clear();
+            // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+            // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+            m_dagOrchTracker.clear();
+            m_listOfServicesWithInputs.clear();
+            m_listOfRootServices.clear();
+            m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+            //m_listOfSinkNodes.clear();
+          }
 
         }
       }
@@ -451,7 +496,8 @@ private:
 
   //ndn::Name m_name;
   //std::string m_nameUri;
-  ndn::Name m_nameAndDigest;
+  //ndn::Name m_nameAndDigest;
+  std::map<std::string, ndn::Name> m_wf2OrchestratorMap; // we make it a map so that we can use a single orchestrator with multiple consumers all requesting different workflows at the same time.
   //ndn::Name m_service;
   json m_dagOrchTracker; // with this data structure, we can keep track of WHICH inputs have arrived, rather than just the NUMBER of inputs. (in case one inputs arrives multiple times)
   json m_dagObject;
