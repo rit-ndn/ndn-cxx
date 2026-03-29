@@ -46,13 +46,14 @@ public:
   //}
 
   void
-  run(char* PREFIX, char* servicePrefix)
+  run(char* PREFIX, char* servicePrefix, uint64_t makespanNS)
   {
     m_PREFIX = PREFIX;
     std::string fullPrefix(PREFIX);
     fullPrefix.append(servicePrefix);
     //m_name = servicePrefix;
     m_service = servicePrefix;
+    m_makespan = makespanNS;
     std::cout << "Forwarder listening to: " << fullPrefix << '\n';
     //std::string shortcutOPTPrefix("/nescoSCOPT/shortcutOPT"); // we don't want to hardcode the PREFIX
     std::string shortcutOPTPrefix(PREFIX);
@@ -434,6 +435,7 @@ private:
 
 
 
+    /*
     ndn::Block myRxedBlock = data.getContent();
     uint8_t *pContent = (uint8_t *)(myRxedBlock.data()); // this points to the first byte, which is the TLV-TYPE (21 for data packet contet)
     pContent++;  // now this points to the second byte, containing 253 (0xFD), meaning size (1024) is expressed with 2 octets
@@ -441,7 +443,6 @@ private:
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
     //std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
-    /*
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;
@@ -460,7 +461,8 @@ private:
     std::string rxedDataName = simpleName.toUri();
 
 
-    // TODO: this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
+    /*
+    // this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
     // and then getting to the first byte (which is all I'm using for data)
     unsigned char serviceOutput = 0;
     uint8_t *pServiceInput = 0;
@@ -471,6 +473,23 @@ private:
     pServiceInput++;  // now this points to the second size octet
     pServiceInput++;  // now we are pointing at the first byte of the true content
     //m_mapOfServiceInputs[rxedDataName] = (*pServiceInput);
+    */
+
+    //std::cout << "Now reading it into string..." << "\n";
+    std::string dataPacketString;
+    dataPacketString = (const char *)data.getContent().value();
+    //std::cout << "Data string received: " << dataPacketString << "\n";
+
+    //std::cout << "Now parsing it into JSON..." << "\n";
+    json dataPacketContents = json::parse(dataPacketString);
+    //std::cout << "Data received: " << dataPacketContents << "\n";
+
+    int64_t serviceInput = 0;
+    int64_t serviceOutput = 0;
+    serviceInput = dataPacketContents["serviceOutput"];
+    //uint64_t makespanNS = 0;
+    //makespanNS = dataPacketContents["makespanNS"]; // we don't really do anything with the previous service's makespan here.
+
 
     // we keep track of which input is for which interest that was sent out. Data packets may arrive in different order than how interests were sent out.
     // just read the index from the dagObject JSON structure
@@ -511,7 +530,8 @@ private:
     }
     else
     {
-      m_vectorOfServiceInputs[index] = (*pServiceInput);
+      //m_vectorOfServiceInputs[index] = (*pServiceInput);
+      m_vectorOfServiceInputs[index] = serviceInput;
     }
 
     // mark this input as having been received
@@ -543,6 +563,14 @@ private:
 
       // TODO7: we should use function pointers here, and have each service be a function defined in a separate file. Figure out how to deal with potentially different num of inputs.
 
+      serviceOutput = 0;
+      for (auto input : m_vectorOfServiceInputs) // for (each input)
+      {
+        serviceOutput += input;
+      }
+
+
+/*
       if (m_service.ndn::Name::toUri() == "/service1"){
         serviceOutput = (m_vectorOfServiceInputs[0])*2;
       }
@@ -643,6 +671,8 @@ private:
             (m_vectorOfServiceInputs[2]);
       }
     
+*/
+
       //std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)serviceOutput << std::endl;
   
       // this following line is for linear workflows only!
@@ -662,9 +692,24 @@ private:
       new_data->setFreshnessPeriod(ndn::time::milliseconds(m_lowestFreshness_ms));
 
       unsigned char myBuffer[1024];
-      // write to the buffer
-      myBuffer[0] = serviceOutput;
+      json dataPacketContents;
+      dataPacketContents.clear();
+      dataPacketContents["makespanNS"] = m_makespan;
+      dataPacketContents["serviceOutput"] = serviceOutput;
+      std::string dataPacketString;
+      dataPacketString = dataPacketContents.dump();
+      if (strlen(dataPacketString.c_str())+1 > 1024) // string length plus NULL terminating character
+      {
+        std::cout << "ForwarderAPP ERROR!! The data packet size is larger than 1024!!!" << "\n";
+      }
+      std::cout << "forwarderAPP - Sending Data packet with JSON data packet contents: " << dataPacketContents << "\n";
+      memcpy(myBuffer, dataPacketString.c_str(), strlen(dataPacketString.c_str())+1);
       new_data->setContent(myBuffer);
+      // write to the buffer
+      //myBuffer[0] = serviceOutput;
+      //new_data->setContent(myBuffer);
+      // instead of just writing a single value to the buffer, now we write the JSON data structure containing makespan and serviceOutput
+      // write to the buffer, after making sure it's big enough
 
 
       // In order for the consumer application to be able to validate the packet, you need to setup
@@ -741,6 +786,7 @@ private:
   std::string m_nameUri;
   ndn::Name m_nameAndDigest;
   ndn::Name m_service;
+  uint64_t m_makespan;
   json m_dagServTracker; // with this data structure, we can keep track of WHICH inputs have arrived, rather than just the NUMBER of inputs. (in case one inputs arrives multiple times)
   json m_dagObject;
   std::vector <unsigned char> m_vectorOfServiceInputs;
@@ -757,7 +803,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Forwarder forwarder;
-    forwarder.run(argv[1], argv[2]);
+    forwarder.run(argv[1], argv[2], std::stoi(argv[3]));
     return 0;
   }
   catch (const std::exception& e) {

@@ -28,6 +28,9 @@
 
 #include <ndn-cxx/util/random.hpp>
 
+#include <nlohmann/json.hpp>
+using json = nlohmann::json;
+
 
 // Enclosing code in ndn simplifies coding (can also use `using namespace ndn`)
 namespace ndn {
@@ -39,7 +42,7 @@ class Producer
 public:
   void
   //run(char* PREFIX, char* servicePrefix)
-  run(char* PREFIX, char* servicePrefix, char* freshnessPeriod_ms, char* uniformFreshness, char* minFreshness_ms, char* maxFreshness_ms)
+  run(char* PREFIX, char* servicePrefix, char* freshnessPeriod_ms, char* uniformFreshness, char* minFreshness_ms, char* maxFreshness_ms, char* makespanNS)
   {
     std::string fullPrefix(PREFIX);
     fullPrefix.append(servicePrefix);
@@ -53,6 +56,7 @@ public:
     m_uniformFreshness = atoi(uniformFreshness);
     m_minFreshness_ms = atoi(minFreshness_ms);
     m_maxFreshness_ms = atoi(maxFreshness_ms);
+    m_makespanNS = atoi(makespanNS);
     if (m_uniformFreshness == 1)
     {
       m_freshnessPeriod_ms = (random::generateWord32() % (m_maxFreshness_ms - m_minFreshness_ms)) + m_minFreshness_ms;
@@ -71,7 +75,7 @@ private:
   void
   onInterest(const Interest& interest)
   {
-    //std::cout << ">> I: " << interest << std::endl;
+    std::cout << ">> I: " << interest << std::endl;
 
     // Create Data packet
     auto data = std::make_shared<Data>();
@@ -81,14 +85,32 @@ private:
       m_freshnessPeriod_ms = (random::generateWord32() % (m_maxFreshness_ms - m_minFreshness_ms)) + m_minFreshness_ms;
     }
     data->setFreshnessPeriod(time::milliseconds(m_freshnessPeriod_ms));
-    data->setFreshnessPeriod(9_s);
+    //data->setFreshnessPeriod(9_s);
 
 
     unsigned char myBuffer[1024];
     // write to the buffer
-    myBuffer[0] = 5;
-    data->setContent(myBuffer);
+    //myBuffer[0] = 5;
+    //data->setContent(myBuffer);
 
+    json dataPacketContents;
+    dataPacketContents.clear();
+    dataPacketContents["makespanNS"] = m_makespanNS;
+    dataPacketContents["serviceOutput"] = 5;
+    std::cout << "ProducerAPP - Sending Data packet with JSON data packet contents: " << dataPacketContents << "\n";
+    std::string dataPacketString;
+    dataPacketString = dataPacketContents.dump();
+    // write to the buffer
+    //myBuffer[0] = serviceOutput;
+    //data->setContent(myBuffer, 1024);
+    // instead of just writing a single value to the buffer, now we write the JSON data structure containing makespan and serviceOutput
+    // write to the buffer, after making sure it's big enough
+    if (strlen(dataPacketString.c_str())+1 > 1024) // string length plus NULL terminating character
+    {
+      std::cout << "ConsumerAPP ERROR!! The data packet size is larger than 1024!!!" << "\n";
+    }
+    memcpy(myBuffer, dataPacketString.c_str(), strlen(dataPacketString.c_str())+1);
+    data->setContent(myBuffer);
 
     // In order for the consumer application to be able to validate the packet, you need to setup
     // the following keys:
@@ -130,6 +152,7 @@ private:
   int m_uniformFreshness;
   int m_minFreshness_ms;
   int m_maxFreshness_ms;
+  uint64_t m_makespanNS;
 };
 
 } // namespace examples
@@ -141,7 +164,7 @@ main(int argc, char** argv)
   try {
     ndn::examples::Producer producer;
     //producer.run(argv[1], argv[2]);
-    producer.run(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6]); // prefix, name, freshness(ms), uniform, min, max
+    producer.run(argv[1], argv[2], argv[3], argv[4], argv[5], argv[6], argv[7]); // prefix, name, freshness(ms), uniform, min, max, makespanNS
     return 0;
   }
   catch (const std::exception& e) {
