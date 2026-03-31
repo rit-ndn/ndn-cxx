@@ -45,7 +45,7 @@ public:
   //}
 
   void
-  run(char* PREFIX, char* servicePrefix)
+  run(char* PREFIX, char* servicePrefix, char* makespanNS)
   {
     m_done = false;
     m_extracted = false;
@@ -54,6 +54,9 @@ public:
     fullPrefix.append(servicePrefix);
     m_name = servicePrefix;
     m_service = servicePrefix;
+    m_makespan = atoi(makespanNS);
+    m_serviceOutput = 0;
+    m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
     m_nameUri = m_name.ndn::Name::toUri();
     std::cout << "ServiceB listening to: " << fullPrefix << '\n';
     m_face.setInterestFilter(fullPrefix,
@@ -89,7 +92,7 @@ private:
 
 
     Interest interest(m_PREFIX + interestName);
-    //interest.setMustBeFresh(true);
+    interest.setMustBeFresh(false);
     interest.setInterestLifetime(6_s); // The default is 4 seconds
 
 
@@ -206,10 +209,25 @@ private:
         // Create new Data packet
         auto new_data = std::make_shared<Data>();
         new_data->setName(m_nameAndDigest);
-        new_data->setFreshnessPeriod(9_s);
+        //new_data->setFreshnessPeriod(9_s);
+        new_data->setFreshnessPeriod(m_lowestFreshness_ms);
+
         unsigned char myBuffer[1024];
+        json dataPacketContents;
+        dataPacketContents.clear();
+        dataPacketContents["makespanNS"] = m_makespan;
+        dataPacketContents["serviceOutput"] = m_serviceOutput;
+        //std::cout << "ServiceB_APP - Sending Data packet with JSON data packet contents: " << dataPacketContents << "\n";
+        std::string dataPacketString;
+        dataPacketString = dataPacketContents.dump();
+        if (strlen(dataPacketString.c_str())+1 > 1024) // string length plus NULL terminating character
+        {
+          std::cout << "ServiceB_APP ERROR!! The data packet size is larger than 1024!!!" << "\n";
+        }
+        memcpy(myBuffer, dataPacketString.c_str(), strlen(dataPacketString.c_str())+1);
+
         // write to the buffer
-        myBuffer[0] = m_serviceOutput;
+        //myBuffer[0] = m_serviceOutput;
         new_data->setContent(myBuffer);
 
 
@@ -235,6 +253,20 @@ private:
         // Return Data packet to the requester
         //std::cout << "<< D: " << *new_data << std::endl;
         m_face.put(*new_data);
+
+        // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+        // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+        /*
+        for (auto& serviceInput : m_dagServTracker[m_nameUri]["inputsRxed"].items())
+        {
+          serviceInput.value() = 0;
+        }
+        */
+        m_dagServTracker.clear();
+        m_vectorOfServiceInputs.erase(m_vectorOfServiceInputs.begin(), m_vectorOfServiceInputs.end());
+        m_done = false;
+        m_extracted = false;
+        m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
 
         return;
       }
@@ -303,7 +335,8 @@ private:
       rxedDataName = (data.getName()).getPrefix(-1).toUri(); // remove the last component of the name (the parameter digest) so we have just the raw name, and convert to Uri string
     }
 
-    // TODO: this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
+/*
+    // this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
     // and then getting to the first byte (which is all I'm using for data)
     uint8_t *pServiceInput = 0;
     //pServiceInput = (uint8_t *)(m_mapOfRxedBlocks.back().data());
@@ -313,6 +346,25 @@ private:
     pServiceInput++;  // now this points to the second size octet
     pServiceInput++;  // now we are pointing at the first byte of the true content
     //m_mapOfServiceInputs[rxedDataName] = (*pServiceInput);
+*/
+    //std::cout << "Now reading it into string..." << "\n";
+    std::string dataPacketString;
+    dataPacketString = (const char *)data.getContent().value();
+    //std::cout << "Data string received: " << dataPacketString << "\n";
+
+    //std::cout << "Now parsing it into JSON..." << "\n";
+    json dataPacketContents = json::parse(dataPacketString);
+    //std::cout << "Data received: " << dataPacketContents << "\n";
+
+    int64_t serviceInput = 0;
+    serviceInput = dataPacketContents["serviceOutput"];
+    //uint64_t makespanNS = 0;
+    //makespanNS = dataPacketContents["makespanNS"]; // we don't really do anything with the previous service's makespan here.
+
+    ndn::time::milliseconds data_freshnessPeriod = data.getFreshnessPeriod();
+    if (data_freshnessPeriod < m_lowestFreshness_ms) {
+      m_lowestFreshness_ms = data_freshnessPeriod;
+    }
 
     // we keep track of which input is for which interest that was sent out. Data packets may arrive in different order than how interests were sent out.
     // just read the index from the dagObject JSON structure
@@ -345,7 +397,8 @@ private:
     }
     else
     {
-      m_vectorOfServiceInputs[index] = (*pServiceInput);
+      //m_vectorOfServiceInputs[index] = (*pServiceInput);
+      m_vectorOfServiceInputs[index] = serviceInput;
     }
 
     // mark this input as having been received
@@ -366,12 +419,18 @@ private:
     if (allInputsReceived == 1)
     {
       //"RUN" the service, and create a new data packet to respond downstream
-      //std::cout << "Running service " << m_service << std::endl;
+      //std::cout << "All inputs received. Running service " << m_service << std::endl;
 
       // run operation. First we need to figure out what service this is, so we know the operation. This screams to be a function pointer! For now just use if's
 
       // TODO: we should use function pointers here, and have each service be a function defined in a separate file. Figure out how to deal with potentially different num of inputs.
 
+      m_serviceOutput = 0;
+      for (auto input : m_vectorOfServiceInputs) // for (each input)
+      {
+        m_serviceOutput += input;
+      }
+/*
       if (m_service.ndn::Name::toUri() == "/service1"){
         m_serviceOutput = (m_vectorOfServiceInputs[0])*2;
       }
@@ -471,11 +530,12 @@ private:
             (m_vectorOfServiceInputs[1])+
             (m_vectorOfServiceInputs[2]);
       }
-      
+*/      
       // we stored the result so we can respond later when the main service interest comes in!!
 
       //std::cout << "Service " << m_service.ndn::Name::toUri() << " has output: " << (int)m_serviceOutput << std::endl;
-    
+   
+      //std::cout << "Setting m_done to true and waiting for the request for data to then answer with the data.";
       m_done = true;
 
   /*  we no longer respond here. We only respond when the main interest for the service comes in.
@@ -538,12 +598,14 @@ private:
   std::string m_nameUri;
   ndn::Name m_nameAndDigest;
   ndn::Name m_service;
+  uint64_t m_makespan;
   bool m_done;
   bool m_extracted;
   unsigned char m_serviceOutput;
   json m_dagServTracker;
   json m_dagObject;
   std::vector <unsigned char> m_vectorOfServiceInputs;
+  ndn::time::milliseconds m_lowestFreshness_ms;
 };
 
 } // namespace examples
@@ -554,7 +616,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::ServiceB serviceB;
-    serviceB.run(argv[1], argv[2]);
+    serviceB.run(argv[1], argv[2], argv[3]);
     return 0;
   }
   catch (const std::exception& e) {

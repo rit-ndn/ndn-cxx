@@ -54,6 +54,7 @@ public:
     //m_service = servicePrefix;
     std::cout << "OrchestratorB listening to: " << fullPrefix << '\n';
     m_serviceInputIndex = 0;
+    m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
     m_face.setInterestFilter(fullPrefix,
                              std::bind(&OrchestratorB::onInterest, this, _2),
                              nullptr, // RegisterPrefixSuccessCallback is optional
@@ -147,7 +148,9 @@ private:
       // Create Data packet
       auto data = std::make_shared<Data>();
       data->setName(interest.getName());
-      data->setFreshnessPeriod(10_s);
+      //data->setFreshnessPeriod(10_s);
+      m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+      data->setFreshnessPeriod(m_lowestFreshness_ms);
       data->setContent("Orchestrator data structures have been reset!"); // the content of this data message is not important. We just want to respond to clear out PIT entries
       m_keyChain.sign(*data, signingWithSha256());
       // Return Data packet to the requester
@@ -293,10 +296,22 @@ private:
               // Create new Data packet
               auto new_data = std::make_shared<Data>();
               new_data->setName(nameAndDigest);
-              new_data->setFreshnessPeriod(9_s);
+              new_data->setFreshnessPeriod(m_lowestFreshness_ms);
               unsigned char myBuffer[1024];
+              json dataPacketContents;
+              dataPacketContents.clear();
+              dataPacketContents["makespanNS"] = 0; // here the makespan is reported as zero because we are not running the service in the orchestrator node, we are just replying with the stored results
+              dataPacketContents["serviceOutput"] = m_vectorOfServiceInputs[inputStorageIndex];
+              //std::cout << "OrchestratorB_APP - Sending Data packet with JSON data packet contents: " << dataPacketContents << "\n";
+              std::string dataPacketString;
+              dataPacketString = dataPacketContents.dump();
+              if (strlen(dataPacketString.c_str())+1 > 1024) // string length plus NULL terminating character
+              {
+                std::cout << "OrchestratorB_APP ERROR!! The data packet size is larger than 1024!!!" << "\n";
+              }
+              memcpy(myBuffer, dataPacketString.c_str(), strlen(dataPacketString.c_str())+1);
               // write to the buffer
-              myBuffer[0] = m_vectorOfServiceInputs[inputStorageIndex];
+              //myBuffer[0] = m_vectorOfServiceInputs[inputStorageIndex];
               new_data->setContent(myBuffer);
 
 
@@ -382,9 +397,10 @@ private:
     std::string rxedDataName = (data.getName()).getPrefix(-1).getSubName(1).toUri(); // remove the 0th component of the name (/interCACHE PREFIX)
     //std::cout << "   Service name is " << rxedDataName << ", using this name to analyze data structure of received inputs.\n";
 
+/*
     //std::cout << "Storing the received result at m_vectorOfServiceInputs[" << std::to_string(m_serviceInputIndex) << "]\n";
     // store the received result, so we can later send it to downstream services
-    // TODO: this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
+    // this is a HACK. I need a better way to get to the first byte of the content. Right now, I'm just incrementing the pointer past the TLV type, and size.
     // and then getting to the first byte (which is all I'm using for data)
     //unsigned char serviceOutput = 0;
     uint8_t *pServiceInput = 0;
@@ -396,8 +412,22 @@ private:
     //m_mapOfServiceInputs[rxedDataName] = (*pServiceInput);
     m_vectorOfServiceInputs.push_back(*pServiceInput); // add it at the end (should be same as putting it at index m_serviceInputIndex)
     //m_vectorOfServiceInputs[m_serviceInputIndex] = (unsigned char)(*pServiceInput);
+*/
 
+    //std::cout << "Now reading it into string..." << "\n";
+    std::string dataPacketString;
+    dataPacketString = (const char *)data.getContent().value();
+    //std::cout << "Data string received: " << dataPacketString << "\n";
 
+    //std::cout << "Now parsing it into JSON..." << "\n";
+    json dataPacketContents = json::parse(dataPacketString);
+
+    m_vectorOfServiceInputs.push_back(dataPacketContents["serviceOutput"]);
+
+    ndn::time::milliseconds data_freshnessPeriod = data.getFreshnessPeriod();
+    if (data_freshnessPeriod < m_lowestFreshness_ms) {
+      m_lowestFreshness_ms = data_freshnessPeriod;
+    }
 
     //std::cout << "Marking down this input as having been received\n";
     // mark down this input as having been received for all services that use this data as an input
@@ -498,7 +528,8 @@ private:
           // Create new Data packet
           auto new_data = std::make_shared<Data>();
           new_data->setName(m_nameAndDigest);
-          new_data->setFreshnessPeriod(9_s);
+          //new_data->setFreshnessPeriod(9_s);
+          new_data->setFreshnessPeriod(m_lowestFreshness_ms);
           new_data->setContent(data.getContent());
 
 
@@ -524,6 +555,18 @@ private:
           // Return Data packet to the requester
           //std::cout << "<< D: " << *new_data << std::endl;
           m_face.put(*new_data);
+
+          // now that we have run the service (and sent the result data out - and caching it), we set inputs to "not received"
+          // this is done so when cached results expire due to freshness, any new interests will trigger inputs to be fetched again, and the service will run again.
+          m_dagOrchTracker.clear();
+          //m_dagObject.clear(); // can't delete here, as we are still using it for iteration. No need to delete anyways, as we overwrite the old one when a workflow interest comes in from the user.
+          m_vectorOfServiceInputs.erase(m_vectorOfServiceInputs.begin(), m_vectorOfServiceInputs.end());
+          m_listOfServicesWithInputs.clear();
+          m_listOfRootServices.clear();
+          //m_listOfSinkNodes.clear(); // can't delete here, as we are still using it for iteration. Delete above when we receive the workflow request from the user.
+          m_serviceInputIndex = 0;
+          m_lowestFreshness_ms = ndn::time::milliseconds(100000); // set to a high value (I know no producer freshness value is higher than 100 seconds)
+          //std::cout << "Updated dagOrchTracker data structure: " << std::setw(2) << m_dagOrchTracker << '\n';
 
 
         }
@@ -575,6 +618,7 @@ private:
   std::list <std::string> m_listOfServicesWithInputs;   // keeps track of which services have inputs
   std::list <std::string> m_listOfRootServices;         // keeps track of which services don't have any inputs
   std::list <std::string> m_listOfSinkNodes;            // keeps track of which node doesn't have an output (usually this is just the consumer)
+  ndn::time::milliseconds m_lowestFreshness_ms;
 };
 
 } // namespace examples

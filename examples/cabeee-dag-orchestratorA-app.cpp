@@ -300,6 +300,7 @@ private:
 
 
 
+    /*
     ndn::Block myRxedBlock = data.getContent();
     uint8_t *pContent = (uint8_t *)(myRxedBlock.data()); // this points to the first byte, which is the TLV-TYPE (21 for data packet contet)
     pContent++;  // now this points to the second byte, containing 253 (0xFD), meaning size (1024) is expressed with 2 octets
@@ -307,7 +308,6 @@ private:
     pContent++;  // now this points to the second size octet
     pContent++;  // now we are pointing at the first byte of the true content
     //std::cout << "\n  The received data value is: " <<  (int)(*pContent) << std::endl << "\n\n";
-    /*
     m_validator.validate(data,
                          [] (const Data&) {
                            std::cout << "Data conforms to trust schema" << std::endl;

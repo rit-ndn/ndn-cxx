@@ -46,14 +46,14 @@ public:
   //}
 
   void
-  run(char* PREFIX, char* servicePrefix, uint64_t makespanNS)
+  run(char* PREFIX, char* servicePrefix, char* makespanNS)
   {
     m_PREFIX = PREFIX;
     std::string fullPrefix(PREFIX);
     fullPrefix.append(servicePrefix);
     //m_name = servicePrefix;
     m_service = servicePrefix;
-    m_makespan = makespanNS;
+    m_makespan = atoi(makespanNS);
     std::cout << "Forwarder listening to: " << fullPrefix << '\n';
     //std::string shortcutOPTPrefix("/nescoSCOPT/shortcutOPT"); // we don't want to hardcode the PREFIX
     std::string shortcutOPTPrefix(PREFIX);
@@ -803,7 +803,7 @@ main(int argc, char** argv)
 {
   try {
     ndn::examples::Forwarder forwarder;
-    forwarder.run(argv[1], argv[2], std::stoi(argv[3]));
+    forwarder.run(argv[1], argv[2], argv[3]);
     return 0;
   }
   catch (const std::exception& e) {
